@@ -40,4 +40,30 @@ router.post("/", (req, res, next) => {
     });
 });
 
+router.put("/", (req, res, next) => {
+  const { followId, name, location, description, contact, date } = req.body;
+
+  const updated = { name, location, description, contact, date };
+
+  Event.findOneAndUpdate({ _id: followId }, { updated })
+    .sort({ createdAt: "desc" })
+    .then(event => {
+      res.json(event);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+router.delete("/", (req, res, next) => {
+  const id = req.body;
+  Event.findOneAndDelete({ _id: id })
+    .then(event => {
+      res.json(event);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 module.exports = router;

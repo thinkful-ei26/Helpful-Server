@@ -40,4 +40,27 @@ router.post("/", (req, res, next) => {
     });
 });
 
+router.put("/", (req, res, next) => {
+  const { rsvpId, rsvp } = req.body;
+
+  Rsvp.findOneAndUpdate({ _id: rsvpId }, { rsvp })
+    .sort({ createdAt: "desc" })
+    .then(rsvp => {
+      res.json(rsvp);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+router.delete("/", (req, res, next) => {
+  const id = req.body;
+  Rsvp.findOneAndDelete({ _id: id })
+    .then(rsvp => {
+      res.json(rsvp);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 module.exports = router;

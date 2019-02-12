@@ -40,4 +40,27 @@ router.post("/", (req, res, next) => {
     });
 });
 
+router.put("/", (req, res, next) => {
+  const { roleId, role } = req.body;
+
+  Role.findOneAndUpdate({ _id: roleId }, { role })
+    .sort({ createdAt: "desc" })
+    .then(role => {
+      res.json(role);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+router.delete("/", (req, res, next) => {
+  const id = req.body;
+  Role.findOneAndDelete({ _id: id })
+    .then(role => {
+      res.json(role);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 module.exports = router;

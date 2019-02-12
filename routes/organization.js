@@ -40,4 +40,36 @@ router.post("/", (req, res, next) => {
     });
 });
 
+router.put("/", (req, res, next) => {
+  const {
+    organizationId,
+    name,
+    location,
+    description,
+    contact,
+    date
+  } = req.body;
+
+  const updated = { name, location, description, contact, date };
+
+  Organization.findOneAndUpdate({ _id: organizationId }, { updated })
+    .sort({ createdAt: "desc" })
+    .then(organization => {
+      res.json(organization);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+router.delete("/", (req, res, next) => {
+  const id = req.body;
+  Organization.findOneAndDelete({ _id: id })
+    .then(organization => {
+      res.json(organization);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 module.exports = router;

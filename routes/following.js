@@ -29,4 +29,27 @@ router.post("/", (req, res, next) => {
     });
 });
 
+router.put("/", (req, res, next) => {
+  const { id, following } = req.body;
+
+  Following.findOneAndUpdate({ _id: followId }, { following })
+    .sort({ createdAt: "desc" })
+    .then(follow => {
+      res.json(follow);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+router.delete("/", (req, res, next) => {
+  const id = req.body;
+  Following.findOneAndDelete({ _id: id })
+    .then(follow => {
+      res.json(follow);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 module.exports = router;
