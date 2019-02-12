@@ -17,8 +17,9 @@ rsvpSchema.set("timestamps", true);
 rsvpSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {
+    delete result._id;
     delete result.__v;
   }
 });
 
-module.export = mongoose.model("Role", rsvpSchema);
+module.exports = mongoose.model("Rsvp", rsvpSchema);

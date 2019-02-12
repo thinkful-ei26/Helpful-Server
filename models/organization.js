@@ -4,7 +4,10 @@ const mongoose = require("mongoose");
 
 const organizationSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
-  location: { type: String, required: true }
+  description: { type: String, required: true },
+  location: { type: String, required: true },
+  date: { type: String, required: true },
+  contact: { type: String, required: true }
 });
 
 /* Date the organization was first on the platform*/
@@ -14,6 +17,7 @@ organizationSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {
     delete result.__v;
+    delete result._id;
   }
 });
 

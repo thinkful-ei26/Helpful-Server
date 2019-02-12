@@ -17,8 +17,9 @@ roleSchema.set("timestamps", true);
 roleSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {
+    delete result._id;
     delete result.__v;
   }
 });
 
-module.export = mongoose.model("Role", roleSchema);
+module.exports = mongoose.model("Role", roleSchema);

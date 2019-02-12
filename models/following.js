@@ -17,8 +17,9 @@ followingSchema.set("timestamps", true);
 followingSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {
+    delete result._id;
     delete result.__v;
   }
 });
 
-module.export = mongoose.model("Following", followingSchema);
+module.exports = mongoose.model("Following", followingSchema);

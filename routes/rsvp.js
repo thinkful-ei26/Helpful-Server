@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
 
-const Rsvp = require("../models/organization");
+const Rsvp = require("../models/rsvp");
 
 const router = express.Router();
 
