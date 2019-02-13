@@ -13,7 +13,7 @@ const organizationSchema = new mongoose.Schema({
 
 /* Date the organization was first on the platform*/
 organizationSchema.set("timestamps", true);
-
+organizationSchema.index({ name: 1, description: 1 }, { unique: true });
 organizationSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {
