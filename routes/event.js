@@ -46,7 +46,7 @@ router.get("/:id", (req, res, next) => {
 /* Post New Event Endpoint  */
 
 router.post("/", (req, res, next) => {
-  const { name, description, location, date, contact, imgUrl } = req.body;
+  let { name, description, location, date, contact, imgUrl } = req.body;
   /* Validation */
   if (!name) {
     const err = new Error("The `name` is not valid");
@@ -74,9 +74,7 @@ router.post("/", (req, res, next) => {
     return next(err);
   }
   if (!imgUrl) {
-    const err = new Error("The `imgUrl` is not valid");
-    err.status = 400;
-    return next(err);
+    imgUrl = 'https://dummyimage.com/200x200/000/fff'
   }
   /*            */
 
@@ -93,7 +91,7 @@ router.post("/", (req, res, next) => {
 /* Put/Edit Event Endpoint  */
 
 router.put("/", (req, res, next) => {
-  const { followId, name, location, description, contact, date, imgUrl } = req.body;
+  let { followId, name, location, description, contact, date, imgUrl } = req.body;
   let event = {};
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(followId)) {
@@ -145,6 +143,9 @@ router.put("/", (req, res, next) => {
     } else {
       event.contact = contact;
     }
+  }
+  if (!imgUrl) {
+    imgUrl = 'https://dummyimage.com/200x200/000/fff'
   }
   if (imgUrl) {
     if (typeof imgUrl !== String) {
