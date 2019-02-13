@@ -33,7 +33,7 @@ router.get("/:id", (req, res, next) => {
   }
   /*            */
 
-  Event.findOne(id)
+  Event.findOne({ _id: id })
     .sort({ createdAt: "desc" })
     .then(events => {
       res.json(events);

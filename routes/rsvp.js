@@ -33,7 +33,7 @@ router.get("/:id", (req, res, next) => {
     return next(err);
   }
   /*            */
-  Rsvp.findOne(id)
+  Rsvp.findOne({ _id: id })
     .sort({ createdAt: "desc" })
     .then(rsvps => {
       res.json(rsvps);

@@ -33,7 +33,7 @@ router.get("/:id", (req, res, next) => {
     return next(err);
   }
   /*            */
-  Following.findOne(id)
+  Following.findOne({ _id: id })
     .sort({ createdAt: "desc" })
     .then(follows => {
       res.json(follows);

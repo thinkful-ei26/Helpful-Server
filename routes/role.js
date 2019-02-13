@@ -33,7 +33,7 @@ router.get("/:id", (req, res, next) => {
     return next(err);
   }
   /*            */
-  Role.findOne(id)
+  Role.findOne({ _id: id })
     .sort({ createdAt: "desc" })
     .then(roles => {
       res.json(roles);
