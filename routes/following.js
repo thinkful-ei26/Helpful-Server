@@ -60,6 +60,7 @@ router.post("/", (req, res, next) => {
   }
   /*            */
   const newFollow = { userId, following: true, organizationId: orgId };
+
   Following.create(newFollow)
     .then(response => {
       res.json(response);
