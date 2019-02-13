@@ -5,21 +5,11 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const passport = require("passport");
 
-<<<<<<< HEAD
 const organizationRouter = require("./routes/organization");
 const followRouter = require("./routes/following");
 const eventRouter = require("./routes/event");
 const roleRouter = require("./routes/role");
 const rsvpRouter = require("./routes/rsvp");
-=======
-// Here we use destructuring assignment with renaming so the two variables
-// called router (from ./users and ./auth) have different names
-// For example:
-// const actorSurnames = { james: "Stewart", robert: "De Niro" };
-// const { james: jimmy, robert: bobby } = actorSurnames;
-// console.log(jimmy); // Stewart - the variable name is jimmy, not james
-// console.log(bobby); // De Niro - the variable name is bobby, not robert
->>>>>>> 85b4335cf7f6955b39721f56901dbac2bae47fd0
 const { router: usersRouter } = require("./users");
 const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 

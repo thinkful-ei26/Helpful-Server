@@ -13,7 +13,7 @@ const eventSchema = new mongoose.Schema({
 
 /* Date the organization was first on the platform*/
 eventSchema.set("timestamps", true);
-
+followingSchema.index({ name: 1, description: 1 }, { unique: true });
 eventSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {

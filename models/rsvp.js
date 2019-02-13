@@ -13,7 +13,7 @@ const rsvpSchema = new mongoose.Schema({
 });
 
 rsvpSchema.set("timestamps", true);
-
+rsvpSchema.index({ userId: 1, eventId: 1 }, { unique: true });
 rsvpSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {
