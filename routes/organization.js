@@ -6,8 +6,18 @@ const Organization = require("../models/organization");
 
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  Organization.findOne()
+/* Get Single Organization Endpoint  */
+
+router.get("/:id", (req, res, next) => {
+  const id = req.params.id;
+  /* Validation */
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error("The `id` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  /*            */
+  Organization.findOne(id)
     .sort({ createdAt: "desc" })
     .then(organizations => {
       res.json(organizations);
@@ -17,7 +27,12 @@ router.get("/", (req, res, next) => {
     });
 });
 
+/* Get All Organizations Endpoint  */
+
 router.get("/all", (req, res, next) => {
+  /* Validation */
+
+  /*            */
   Organization.find()
     .sort({ createdAt: "desc" })
     .then(organizations => {
@@ -28,8 +43,39 @@ router.get("/all", (req, res, next) => {
     });
 });
 
+/* Post New Organization Endpoint  */
+
 router.post("/", (req, res, next) => {
-  const newOrganization = req.body;
+  const { name, description, location, date, contact } = req.body;
+  /* Validation */
+  if (!name) {
+    const err = new Error("The `name` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  if (!description) {
+    const err = new Error("The `description` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  if (!location) {
+    const err = new Error("The `location` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  if (!date) {
+    const err = new Error("The `date` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  if (!contact) {
+    const err = new Error("The `contact` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  /*            */
+
+  const newOrganization = { name, description, location, date, contact };
 
   Organization.create(newOrganization)
     .then(response => {
@@ -39,6 +85,8 @@ router.post("/", (req, res, next) => {
       next(err);
     });
 });
+
+/* Put/Edit Organization Endpoint  */
 
 router.put("/", (req, res, next) => {
   const {
@@ -50,9 +98,61 @@ router.put("/", (req, res, next) => {
     date
   } = req.body;
 
-  const updated = { name, location, description, contact, date };
+  let organization = {};
+  /* Validation */
+  if (!mongoose.Types.ObjectId.isValid(followId)) {
+    const err = new Error("The `id` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  if (name) {
+    if (typeof name !== String) {
+      const err = new Error("The `name` is not valid");
+      err.status = 400;
+      return next(err);
+    } else {
+      organization.name = name;
+    }
+  }
+  if (description) {
+    if (typeof description !== String) {
+      const err = new Error("The `description` is not valid");
+      err.status = 400;
+      return next(err);
+    } else {
+      organization.description = description;
+    }
+  }
+  if (location) {
+    if (typeof location !== String) {
+      const err = new Error("The `location` is not valid");
+      err.status = 400;
+      return next(err);
+    } else {
+      organization.location = location;
+    }
+  }
+  if (date) {
+    if (typeof date !== String) {
+      const err = new Error("The `date` is not valid");
+      err.status = 400;
+      return next(err);
+    } else {
+      organization.date = date;
+    }
+  }
+  if (contact) {
+    if (typeof contact !== String) {
+      const err = new Error("The `contact` is not valid");
+      err.status = 400;
+      return next(err);
+    } else {
+      organization.contact = contact;
+    }
+  }
+  /*            */
 
-  Organization.findOneAndUpdate({ _id: organizationId }, { updated })
+  Organization.findOneAndUpdate({ _id: organizationId }, { organization })
     .sort({ createdAt: "desc" })
     .then(organization => {
       res.json(organization);
@@ -62,8 +162,17 @@ router.put("/", (req, res, next) => {
     });
 });
 
+/* Delete Single Organization Endpoint  */
+
 router.delete("/", (req, res, next) => {
   const id = req.body;
+  /* Validation */
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error("The `id` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  /*            */
   Organization.findOneAndDelete({ _id: id })
     .then(organization => {
       res.json(organization);
