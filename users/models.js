@@ -23,7 +23,8 @@ const UserSchema = mongoose.Schema({
   date: {
     type: Date,
     default: Date.now()
-  }
+  },
+  imgUrl: { type: String, required: true }
 });
 
 /* remove the user id from this before production */
@@ -33,7 +34,8 @@ UserSchema.methods.serialize = function () {
     firstName: this.firstName || "",
     lastName: this.lastName || "",
     id: this._id,
-    email: this.email || ""
+    email: this.email || "",
+    imgUrl: this.imgUrl
   };
 };
 

@@ -46,7 +46,7 @@ router.get("/:id", (req, res, next) => {
 /* Post New Organization Endpoint  */
 
 router.post("/", (req, res, next) => {
-  const { name, description, location, date, contact } = req.body;
+  const { name, description, location, date, contact, imgUrl } = req.body;
   /* Validation */
   if (!name) {
     const err = new Error("The `name` is not valid");
@@ -73,9 +73,14 @@ router.post("/", (req, res, next) => {
     err.status = 400;
     return next(err);
   }
+  if (!imgUrl) {
+    const err = new Error("The `imgUrl` is not valid");
+    err.status = 400;
+    return next(err);
+  }
   /*            */
 
-  const newOrganization = { name, description, location, date, contact };
+  const newOrganization = { name, description, location, date, contact, imgUrl };
 
   Organization.create(newOrganization)
     .then(response => {
@@ -148,6 +153,15 @@ router.put("/", (req, res, next) => {
       return next(err);
     } else {
       organization.contact = contact;
+    }
+  }
+  if (imgUrl) {
+    if (typeof imgUrl !== String) {
+      const err = new Error("The `imgUrl` is not valid");
+      err.status = 400;
+      return next(err);
+    } else {
+      organization.imgUrl = imgUrl;
     }
   }
   /*            */

@@ -46,7 +46,7 @@ router.get("/:id", (req, res, next) => {
 /* Post New Event Endpoint  */
 
 router.post("/", (req, res, next) => {
-  const { name, description, location, date, contact } = req.body;
+  const { name, description, location, date, contact, imgUrl } = req.body;
   /* Validation */
   if (!name) {
     const err = new Error("The `name` is not valid");
@@ -73,9 +73,14 @@ router.post("/", (req, res, next) => {
     err.status = 400;
     return next(err);
   }
+  if (!imgUrl) {
+    const err = new Error("The `imgUrl` is not valid");
+    err.status = 400;
+    return next(err);
+  }
   /*            */
 
-  const newEvent = { name, description, location, date, contact };
+  const newEvent = { name, description, location, date, contact, imgUrl };
   Event.create(newEvent)
     .then(response => {
       res.json(response);
@@ -88,7 +93,7 @@ router.post("/", (req, res, next) => {
 /* Put/Edit Event Endpoint  */
 
 router.put("/", (req, res, next) => {
-  const { followId, name, location, description, contact, date } = req.body;
+  const { followId, name, location, description, contact, date, imgUrl } = req.body;
   let event = {};
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(followId)) {
@@ -107,7 +112,7 @@ router.put("/", (req, res, next) => {
   }
   if (description) {
     if (typeof description !== String) {
-      const err = new Error("The `name` is not valid");
+      const err = new Error("The `description` is not valid");
       err.status = 400;
       return next(err);
     } else {
@@ -116,7 +121,7 @@ router.put("/", (req, res, next) => {
   }
   if (location) {
     if (typeof location !== String) {
-      const err = new Error("The `name` is not valid");
+      const err = new Error("The `location` is not valid");
       err.status = 400;
       return next(err);
     } else {
@@ -125,7 +130,7 @@ router.put("/", (req, res, next) => {
   }
   if (date) {
     if (typeof date !== String) {
-      const err = new Error("The `name` is not valid");
+      const err = new Error("The `date` is not valid");
       err.status = 400;
       return next(err);
     } else {
@@ -134,11 +139,20 @@ router.put("/", (req, res, next) => {
   }
   if (contact) {
     if (typeof contact !== String) {
-      const err = new Error("The `name` is not valid");
+      const err = new Error("The `contact` is not valid");
       err.status = 400;
       return next(err);
     } else {
       event.contact = contact;
+    }
+  }
+  if (imgUrl) {
+    if (typeof imgUrl !== String) {
+      const err = new Error("The `imgUrl` is not valid");
+      err.status = 400;
+      return next(err);
+    } else {
+      event.imgUrl = imgUrl;
     }
   }
   /*            */
