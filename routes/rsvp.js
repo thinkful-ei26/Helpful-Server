@@ -6,6 +6,22 @@ const Rsvp = require("../models/rsvp");
 
 const router = express.Router();
 
+/* Get All Rsvps Endpoint  */
+
+router.get("/all", (req, res, next) => {
+  /* Validation */
+
+  /*            */
+  Rsvp.find()
+    .sort({ createdAt: "desc" })
+    .then(rsvps => {
+      res.json(rsvps);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 /* Get Single Rsvp Endpoint  */
 
 router.get("/:id", (req, res, next) => {
@@ -27,49 +43,23 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
-/* Get All Rsvps Endpoint  */
-
-router.get("/all", (req, res, next) => {
-  /* Validation */
-
-  /*            */
-  Rsvp.find()
-    .sort({ createdAt: "desc" })
-    .then(rsvps => {
-      res.json(rsvps);
-    })
-    .catch(err => {
-      next(err);
-    });
-});
-
 /* Post New Rsvp Endpoint  */
 
 router.post("/", (req, res, next) => {
-  const { userId, orgId, rsvp } = req.body;
+  const { userId, eventId } = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error("The `User id` is not valid");
     err.status = 400;
     return next(err);
   }
-  if (!mongoose.Types.ObjectId.isValid(orgId)) {
+  if (!mongoose.Types.ObjectId.isValid(eventId)) {
     const err = new Error("The `Organization id` is not valid");
     err.status = 400;
     return next(err);
   }
-  if (!rsvp) {
-    const err = new Error("Missing `rsvp` in request body");
-    err.status = 400;
-    return next(err);
-  }
-  if (typeof rsvp !== String) {
-    const err = new Error("Error 'rsvp' was not a string");
-    err.status = 400;
-    return next(err);
-  }
   /*            */
-  const newRsvp = { userId, rsvp, orgId };
+  const newRsvp = { userId, rsvp: true, eventId };
 
   Rsvp.create(newRsvp)
     .then(response => {

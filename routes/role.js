@@ -6,6 +6,22 @@ const Role = require("../models/role");
 
 const router = express.Router();
 
+/* Get All Roles Endpoint  */
+
+router.get("/all", (req, res, next) => {
+  /* Validation */
+
+  /*            */
+  Role.find()
+    .sort({ createdAt: "desc" })
+    .then(roles => {
+      res.json(roles);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 /* Get Single Role Endpoint  */
 
 router.get("/:id", (req, res, next) => {
@@ -18,22 +34,6 @@ router.get("/:id", (req, res, next) => {
   }
   /*            */
   Role.findOne(id)
-    .sort({ createdAt: "desc" })
-    .then(roles => {
-      res.json(roles);
-    })
-    .catch(err => {
-      next(err);
-    });
-});
-
-/* Get All Roles Endpoint  */
-
-router.get("/all", (req, res, next) => {
-  /* Validation */
-
-  /*            */
-  Role.find()
     .sort({ createdAt: "desc" })
     .then(roles => {
       res.json(roles);
@@ -63,13 +63,14 @@ router.post("/", (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  if (typeof role !== String) {
+  if (typeof role !== "string") {
+    console.log(typeof role);
     const err = new Error("Error 'role' was not a string");
     err.status = 400;
     return next(err);
   }
   /*            */
-  const newRole = { userId, role, orgId };
+  const newRole = { userId, role, organizationId: orgId };
   Role.create(newRole)
     .then(response => {
       res.json(response);

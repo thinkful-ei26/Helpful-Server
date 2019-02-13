@@ -6,6 +6,22 @@ const Organization = require("../models/organization");
 
 const router = express.Router();
 
+/* Get All Organizations Endpoint  */
+
+router.get("/all", (req, res, next) => {
+  /* Validation */
+
+  /*            */
+  Organization.find()
+    .sort({ createdAt: "desc" })
+    .then(organizations => {
+      res.json(organizations);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 /* Get Single Organization Endpoint  */
 
 router.get("/:id", (req, res, next) => {
@@ -18,22 +34,6 @@ router.get("/:id", (req, res, next) => {
   }
   /*            */
   Organization.findOne(id)
-    .sort({ createdAt: "desc" })
-    .then(organizations => {
-      res.json(organizations);
-    })
-    .catch(err => {
-      next(err);
-    });
-});
-
-/* Get All Organizations Endpoint  */
-
-router.get("/all", (req, res, next) => {
-  /* Validation */
-
-  /*            */
-  Organization.find()
     .sort({ createdAt: "desc" })
     .then(organizations => {
       res.json(organizations);

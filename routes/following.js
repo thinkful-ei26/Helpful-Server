@@ -6,6 +6,22 @@ const Following = require("../models/following");
 
 const router = express.Router();
 
+/* Get All Follows Endpoint  */
+
+router.get("/all", (req, res, next) => {
+  /* Validation */
+
+  /*            */
+  Following.findOne()
+    .sort({ createdAt: "desc" })
+    .then(follows => {
+      res.json(follows);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 /* Get Single Follow Endpoint  */
 
 router.get("/:id", (req, res, next) => {
@@ -18,22 +34,6 @@ router.get("/:id", (req, res, next) => {
   }
   /*            */
   Following.findOne(id)
-    .sort({ createdAt: "desc" })
-    .then(follows => {
-      res.json(follows);
-    })
-    .catch(err => {
-      next(err);
-    });
-});
-
-/* Get All Follows Endpoint  */
-
-router.get("/all", (req, res, next) => {
-  /* Validation */
-
-  /*            */
-  Following.findOne()
     .sort({ createdAt: "desc" })
     .then(follows => {
       res.json(follows);

@@ -6,6 +6,22 @@ const Event = require("../models/event");
 
 const router = express.Router();
 
+/* Get All Events Endpoint  */
+
+router.get("/all", (req, res, next) => {
+  /* Validation */
+
+  /*            */
+  Event.find()
+    .sort({ createdAt: "desc" })
+    .then(events => {
+      res.json(events);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 /* Get Single Event Endpoint  */
 router.get("/:id", (req, res, next) => {
   const id = req.params.id;
@@ -18,22 +34,6 @@ router.get("/:id", (req, res, next) => {
   /*            */
 
   Event.findOne(id)
-    .sort({ createdAt: "desc" })
-    .then(events => {
-      res.json(events);
-    })
-    .catch(err => {
-      next(err);
-    });
-});
-
-/* Get All Events Endpoint  */
-
-router.get("/all", (req, res, next) => {
-  /* Validation */
-
-  /*            */
-  Event.find()
     .sort({ createdAt: "desc" })
     .then(events => {
       res.json(events);
