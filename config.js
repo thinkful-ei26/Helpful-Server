@@ -1,7 +1,6 @@
 "use strict";
 exports.DATABASE_URL =
-  process.env.DATABASE_URL ||
-  "mongodb://thebrogrammers:tjdzR6tq3euumH3Up6YE@cluster0-shard-00-00-o4har.mongodb.net:27017,cluster0-shard-00-01-o4har.mongodb.net:27017,cluster0-shard-00-02-o4har.mongodb.net:27017/Helpful?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true";
+  process.env.DATABASE_URL || "mongodb://localhost/jwt-auth-demo";
 exports.TEST_DATABASE_URL =
   process.env.TEST_DATABASE_URL || "mongodb://localhost/jwt-auth-demo";
 exports.PORT = process.env.PORT || 8080;
