@@ -3,9 +3,9 @@
 const mongoose = require("mongoose");
 
 const followingSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   following: { type: Boolean, required: true },
-  organization: {
+  organizationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Organization",
     required: true

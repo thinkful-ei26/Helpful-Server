@@ -59,7 +59,7 @@ router.post("/", (req, res, next) => {
     return next(err);
   }
   /*            */
-  const newFollow = { userId, following: true, orgId };
+  const newFollow = { userId, following: true, organizationId: orgId };
   Following.create(newFollow)
     .then(response => {
       res.json(response);
@@ -72,7 +72,7 @@ router.post("/", (req, res, next) => {
 /* Put/Edit Follow Endpoint  */
 
 router.put("/", (req, res, next) => {
-  const { id, following } = req.body;
+  const { followId, following } = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
     const err = new Error("The `id` is not valid");
