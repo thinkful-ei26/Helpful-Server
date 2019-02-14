@@ -180,13 +180,13 @@ router.delete("/", (req, res, next) => {
 router.delete("/user", (req, res, next) => {
   const {userId, eventId} = req.body;
   /* Validation */
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error("The `id` is not valid");
     err.status = 400;
     return next(err);
   }
   /*            */
-  Rsvp.findOneAndDelete({ userId, eventId })
+  Rsvp.deleteOne({ userId, eventId })
     .then(rsvp => {
       res.json(rsvp);
     })
