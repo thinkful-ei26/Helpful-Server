@@ -15,6 +15,7 @@ router.get("/all", (req, res, next) => {
   Event.find()
     .sort({ createdAt: "desc" })
     .then(events => {
+      console.log(events)
       res.json(events);
     })
     .catch(err => {
@@ -25,6 +26,7 @@ router.get("/all", (req, res, next) => {
 /* Get Single Event Endpoint  */
 router.get("/:id", (req, res, next) => {
   const id = req.params.id;
+  console.log(id)
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
     const err = new Error("The `id` is not valid");
