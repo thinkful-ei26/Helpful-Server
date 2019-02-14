@@ -10,6 +10,7 @@ const followRouter = require("./routes/following");
 const eventRouter = require("./routes/event");
 const roleRouter = require("./routes/role");
 const rsvpRouter = require("./routes/rsvp");
+const meetupRouter = require("./routes/rsvpmeetup");
 const { router: usersRouter } = require("./users");
 const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 
@@ -43,6 +44,7 @@ app.use("/org", organizationRouter);
 app.use("/event", eventRouter);
 app.use("/follow", followRouter);
 app.use("/rsvp", rsvpRouter);
+app.use("/meetup", meetupRouter);
 app.use("/role", roleRouter);
 const jwtAuth = passport.authenticate("jwt", { session: false });
 
