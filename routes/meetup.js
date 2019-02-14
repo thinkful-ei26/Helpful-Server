@@ -73,12 +73,17 @@ router.post("/", (req, res, next) => {
         err.status = 400;
         return next(err);
     }
+    if (!userId) {
+        const err = new Error("The `userId` is not valid");
+        err.status = 400;
+        return next(err);
+    }
     if (!imgUrl) {
         imgUrl = 'https://dummyimage.com/200x200/000/fff'
     }
     /*            */
 
-    const newEvent = { name, description, location, date, contact, imgUrl };
+    const newEvent = { name, description, location, date, contact, imgUrl, userId };
     Event.create(newEvent)
         .then(response => {
             res.json(response);

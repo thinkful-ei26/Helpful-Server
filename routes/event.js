@@ -48,7 +48,7 @@ router.get("/:id", (req, res, next) => {
 /* Post New Event Endpoint  */
 
 router.post("/", (req, res, next) => {
-  let { name, description, location, date, contact, imgUrl } = req.body;
+  let { name, description, location, date, contact, imgUrl, orgId } = req.body;
   /* Validation */
   if (!name) {
     const err = new Error("The `name` is not valid");
@@ -75,12 +75,17 @@ router.post("/", (req, res, next) => {
     err.status = 400;
     return next(err);
   }
+  if (!orgId) {
+    const err = new Error("The `orgId` is not valid");
+    err.status = 400;
+    return next(err);
+  }
   if (!imgUrl) {
     imgUrl = 'https://dummyimage.com/200x200/000/fff'
   }
   /*            */
 
-  const newEvent = { name, description, location, date, contact, imgUrl };
+  const newEvent = { name, description, location, date, contact, imgUrl, organizationId: orgId };
   Event.create(newEvent)
     .then(response => {
       res.json(response);

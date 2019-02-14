@@ -9,7 +9,7 @@ const eventSchema = new mongoose.Schema({
   date: { type: String, required: true },
   contact: { type: String, required: true },
   imgUrl: { type: String, required: true },
-  organizationID: { type: mongoose.Schema.Types.ObjectId, required: true }
+  organizationId: { type: mongoose.Schema.Types.ObjectId, required: true }
 });
 
 /* Date the organization was first on the platform*/
