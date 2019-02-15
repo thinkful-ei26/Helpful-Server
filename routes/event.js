@@ -1,20 +1,23 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const passport = require("passport");
+'use strict';
+const express = require('express');
+const mongoose = require('mongoose');
+const passport = require('passport');
+
 
 const getGeoLocation = require("../utils/geo-location");
 const Event = require("../models/event");
+
 
 const router = express.Router();
 
 /* Get All Events Endpoint  */
 
-router.get("/all", (req, res, next) => {
+router.get('/all', (req, res, next) => {
   /* Validation */
 
   /*            */
   Event.find()
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(events => {
       console.log(events)
       res.json(events);
@@ -25,19 +28,19 @@ router.get("/all", (req, res, next) => {
 });
 
 /* Get Single Event Endpoint  */
-router.get("/:id", (req, res, next) => {
+router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   console.log(id)
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
   /*            */
 
   Event.findOne({ _id: id })
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(events => {
       res.json(events);
     })
@@ -46,33 +49,50 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
+/* Get Events by org Id */
+
+router.get('/org/:id', (req, res, next) => {
+  const orgId = req.params.id;
+  console.log(orgId)
+  Event.find({ organizationId: orgId })
+    .sort({ createdAt: "desc" })
+    .then(events => {
+      res.json(events);
+    })
+    .catch(err => {
+      next(err);
+    });
+
+})
+
+
 /* Post New Event Endpoint  */
 
 router.post("/", (req, res, next) => {
   let { name, description, location, date, contact, imgUrl, orgId } = req.body;
   /* Validation */
   if (!name) {
-    const err = new Error("The `name` is not valid");
+    const err = new Error('The `name` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!description) {
-    const err = new Error("The `description` is not valid");
+    const err = new Error('The `description` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!location) {
-    const err = new Error("The `location` is not valid");
+    const err = new Error('The `location` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!date) {
-    const err = new Error("The `date` is not valid");
+    const err = new Error('The `date` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!contact) {
-    const err = new Error("The `contact` is not valid");
+    const err = new Error('The `contact` is not valid');
     err.status = 400;
     return next(err);
   }
@@ -103,18 +123,18 @@ router.post("/", (req, res, next) => {
 
 /* Put/Edit Event Endpoint  */
 
-router.put("/", (req, res, next) => {
+router.put('/', (req, res, next) => {
   let { followId, name, location, description, contact, date, imgUrl } = req.body;
   let event = {};
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(followId)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
   if (name) {
     if (typeof name !== String) {
-      const err = new Error("The `name` is not valid");
+      const err = new Error('The `name` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -123,7 +143,7 @@ router.put("/", (req, res, next) => {
   }
   if (description) {
     if (typeof description !== String) {
-      const err = new Error("The `description` is not valid");
+      const err = new Error('The `description` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -132,7 +152,7 @@ router.put("/", (req, res, next) => {
   }
   if (location) {
     if (typeof location !== String) {
-      const err = new Error("The `location` is not valid");
+      const err = new Error('The `location` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -141,7 +161,7 @@ router.put("/", (req, res, next) => {
   }
   if (date) {
     if (typeof date !== String) {
-      const err = new Error("The `date` is not valid");
+      const err = new Error('The `date` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -150,7 +170,7 @@ router.put("/", (req, res, next) => {
   }
   if (contact) {
     if (typeof contact !== String) {
-      const err = new Error("The `contact` is not valid");
+      const err = new Error('The `contact` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -158,11 +178,11 @@ router.put("/", (req, res, next) => {
     }
   }
   if (!imgUrl) {
-    imgUrl = 'https://dummyimage.com/200x200/000/fff'
+    imgUrl = 'https://dummyimage.com/200x200/000/fff';
   }
   if (imgUrl) {
     if (typeof imgUrl !== String) {
-      const err = new Error("The `imgUrl` is not valid");
+      const err = new Error('The `imgUrl` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -172,7 +192,7 @@ router.put("/", (req, res, next) => {
   /*            */
 
   Event.findOneAndUpdate({ _id: followId }, { event })
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(event => {
       res.json(event);
     })
@@ -183,11 +203,13 @@ router.put("/", (req, res, next) => {
 
 /* Delete Single Event Endpoint  */
 
+
 router.delete("/", (req, res, next) => {
   const {id} = req.body;
+
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
