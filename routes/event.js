@@ -45,6 +45,23 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
+/* Get Events by org Id */
+
+router.get('/org/:id', (req, res, next) => {
+  const orgId = req.params.id;
+  console.log(orgId)
+  Event.find({ organizationId: orgId })
+    .sort({ createdAt: "desc" })
+    .then(events => {
+      res.json(events);
+    })
+    .catch(err => {
+      next(err);
+    });
+
+})
+
+
 /* Post New Event Endpoint  */
 
 router.post("/", (req, res, next) => {
