@@ -5,13 +5,14 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
 
-const organizationRouter = require('./routes/organization');
-const followRouter = require('./routes/following');
-const eventRouter = require('./routes/event');
-const roleRouter = require('./routes/role');
-const rsvpRouter = require('./routes/rsvp');
-const { router: usersRouter } = require('./users');
-const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+const organizationRouter = require("./routes/organization");
+const followRouter = require("./routes/following");
+const eventRouter = require("./routes/event");
+const roleRouter = require("./routes/role");
+const rsvpRouter = require("./routes/rsvp");
+const meetupRouter = require("./routes/rsvpmeetup");
+const { router: usersRouter } = require("./users");
+const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 
 mongoose.Promise = global.Promise;
 
@@ -37,14 +38,15 @@ app.use(express.json());
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-app.use('/users/', usersRouter);
-app.use('/auth/', authRouter);
-app.use('/org', organizationRouter);
-app.use('/event', eventRouter);
-app.use('/follow', followRouter);
-app.use('/rsvp', rsvpRouter);
-app.use('/role', roleRouter);
-const jwtAuth = passport.authenticate('jwt', { session: false });
+app.use("/users/", usersRouter);
+app.use("/auth/", authRouter);
+app.use("/org", organizationRouter);
+app.use("/event", eventRouter);
+app.use("/follow", followRouter);
+app.use("/rsvp", rsvpRouter);
+app.use("/meetup", meetupRouter);
+app.use("/role", roleRouter);
+const jwtAuth = passport.authenticate("jwt", { session: false });
 
 // A protected endpoint which needs a valid JWT to access it
 app.get('/api/protected', jwtAuth, (req, res) => {

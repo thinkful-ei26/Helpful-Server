@@ -22,6 +22,51 @@ router.get("/all", (req, res, next) => {
     });
 });
 
+
+/* Get All Roles Endpoint by userId */
+
+router.get("/user/:id", (req, res, next) => {
+  const id = req.params.id;
+  /* Validation */
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error("The `id` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  /*            */
+  Role.find({ userId: id })
+    .sort({ createdAt: "desc" })
+    .then(roles => {
+      res.json(roles);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+/* Get All Roles Endpoint by orgId */
+
+router.get("/org/:id", (req, res, next) => {
+
+  const id = req.params.id;
+  /* Validation */
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error("The `id` is not valid");
+    err.status = 400;
+    return next(err);
+  }
+  /*            */
+  Role.find({ organizationId: id })
+    .sort({ createdAt: "desc" })
+    .then(roles => {
+      res.json(roles);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+
 /* Get Single Role Endpoint  */
 
 router.get("/:id", (req, res, next) => {

@@ -16,6 +16,7 @@ router.get('/all', (req, res, next) => {
   Event.find()
     .sort({ createdAt: 'desc' })
     .then(events => {
+      console.log(events)
       res.json(events);
     })
     .catch(err => {
@@ -26,6 +27,7 @@ router.get('/all', (req, res, next) => {
 /* Get Single Event Endpoint  */
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
+  console.log(id)
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
     const err = new Error('The `id` is not valid');
@@ -46,8 +48,8 @@ router.get('/:id', (req, res, next) => {
 
 /* Post New Event Endpoint  */
 
-router.post('/', (req, res, next) => {
-  let { name, description, location, date, contact, imgUrl } = req.body;
+router.post("/", (req, res, next) => {
+  let { name, description, location, date, contact, imgUrl, orgId } = req.body;
   /* Validation */
   if (!name) {
     const err = new Error('The `name` is not valid');
@@ -74,12 +76,17 @@ router.post('/', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
+  if (!orgId) {
+    const err = new Error("The `orgId` is not valid");
+    err.status = 400;
+    return next(err);
+  }
   if (!imgUrl) {
     imgUrl = 'https://dummyimage.com/200x200/000/fff';
   }
   /*            */
 
-  const newEvent = { name, description, location, date, contact, imgUrl };
+  const newEvent = { name, description, location, date, contact, imgUrl, organizationId: orgId };
   Event.create(newEvent)
     .then(response => {
       res.json(response);
