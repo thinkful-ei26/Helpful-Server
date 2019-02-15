@@ -13,7 +13,7 @@ const followingSchema = new mongoose.Schema({
 });
 
 followingSchema.set("timestamps", true);
-
+followingSchema.index({ userId: 1, organizationId: 1 }, { unique: true });
 followingSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {

@@ -13,7 +13,7 @@ const roleSchema = new mongoose.Schema({
 });
 
 roleSchema.set("timestamps", true);
-
+roleSchema.index({ userId: 1, organizationId: 1 }, { unique: true });
 roleSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, result) => {
