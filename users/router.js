@@ -22,7 +22,7 @@ router.post("/register", jsonParser, (req, res) => {
     });
   }
 
-  const stringFields = ["username", "password", "firstName", "lastName", "imgUrl"];
+  const stringFields = ["username", "password", "email", "firstName", "lastName", "imgUrl"];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== "string"
   );
