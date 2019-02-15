@@ -3,7 +3,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-const Event = require('../models/event');
+
+const getGeoLocation = require("../utils/geo-location");
+const Event = require("../models/event");
+
 
 const router = express.Router();
 
@@ -103,14 +106,19 @@ router.post("/", (req, res, next) => {
   }
   /*            */
 
-  const newEvent = { name, description, location, date, contact, imgUrl, organizationId: orgId };
-  Event.create(newEvent)
-    .then(response => {
-      res.json(response);
-    })
-    .catch(err => {
-      next(err);
-    });
+  getGeoLocation(location)
+  .then(geoLocation => {
+    const newEvent = { name, description, location, geoLocation, date, contact, imgUrl, organizationId: orgId };
+    Event.create(newEvent)
+      .then(response => {
+        res.json(response);
+      })
+      .catch(err => {
+        next(err);
+      });
+  })
+
+  
 });
 
 /* Put/Edit Event Endpoint  */
@@ -195,8 +203,10 @@ router.put('/', (req, res, next) => {
 
 /* Delete Single Event Endpoint  */
 
-router.delete('/', (req, res, next) => {
-  const id = req.body;
+
+router.delete("/", (req, res, next) => {
+  const {id} = req.body;
+
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
     const err = new Error('The `id` is not valid');

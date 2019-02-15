@@ -63,11 +63,6 @@ router.post("/", (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  if (!date) {
-    const err = new Error("The `date` is not valid");
-    err.status = 400;
-    return next(err);
-  }
   if (!contact) {
     const err = new Error("The `contact` is not valid");
     err.status = 400;
@@ -78,7 +73,7 @@ router.post("/", (req, res, next) => {
   }
   /*            */
 
-  const newOrganization = { name, description, location, date, contact, imgUrl };
+  const newOrganization = { name, description, location, contact, imgUrl };
 
   Organization.create(newOrganization)
     .then(response => {
