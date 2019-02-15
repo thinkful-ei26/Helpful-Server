@@ -50,7 +50,7 @@ router.get("/:id", (req, res, next) => {
 router.get('/org/:id', (req, res, next) => {
   const orgId = req.params.id;
   console.log(orgId)
-  Event.findOne({ organizationId: orgId })
+  Event.find({ organizationId: orgId })
     .sort({ createdAt: "desc" })
     .then(events => {
       res.json(events);
