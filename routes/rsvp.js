@@ -6,9 +6,12 @@ const Rsvp = require("../models/rsvp");
 
 const router = express.Router();
 
+/* Jwt Auth */
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
 /* Get All Rsvps Endpoint  */
 // get all rsvp's
-router.get("/all", (req, res, next) => {
+router.get("/all", jwtAuth, (req, res, next) => {
   /* Validation */
 
   /*            */
@@ -23,15 +26,15 @@ router.get("/all", (req, res, next) => {
 });
 
 // get all rsvp's for a user
-router.get("/user/:userId", (req, res, next) => {
-  const userId = req.params.userId;
+router.get("/user", jwtAuth, (req, res, next) => {
+  const userId = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error("The `userId` is not valid");
     err.status = 400;
     return next(err);
-  } 
-  Rsvp.find({userId})
+  }
+  Rsvp.find({ userId })
     .sort({ createdAt: "desc" })
     .then(rsvps => {
       res.json(rsvps);
@@ -42,15 +45,15 @@ router.get("/user/:userId", (req, res, next) => {
 });
 
 // get all rsvp's for an event
-router.get("/event/:eventId", (req, res, next) => {
+router.get("/event/:eventId", jwtAuth, (req, res, next) => {
   const eventId = req.params.eventId;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(eventId)) {
     const err = new Error("The `eventId` is not valid");
     err.status = 400;
     return next(err);
-  } 
-  Rsvp.find({eventId})
+  }
+  Rsvp.find({ eventId })
     .sort({ createdAt: "desc" })
     .then(rsvps => {
       res.json(rsvps);
@@ -62,7 +65,7 @@ router.get("/event/:eventId", (req, res, next) => {
 
 /* Get Single Rsvp Endpoint  */
 // get rsvp by id
-router.get("/:id", (req, res, next) => {
+router.get("/:id", jwtAuth, (req, res, next) => {
   const id = req.params.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -81,8 +84,9 @@ router.get("/:id", (req, res, next) => {
 });
 
 // get rsvp by userId and eventId
-router.get("/:userId/:eventId", (req, res, next) => {
-  const {userId, eventId} = req.params;
+router.get("/specific/:eventId", jwtAuth, (req, res, next) => {
+  const eventId = req.params;
+  const userId = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error("The `user id` is not valid");
@@ -100,8 +104,9 @@ router.get("/:userId/:eventId", (req, res, next) => {
 
 /* Post New Rsvp Endpoint  */
 
-router.post("/", (req, res, next) => {
-  const { userId, eventId } = req.body;
+router.post("/", jwtAuth, (req, res, next) => {
+  const eventId = req.body;
+  const userId = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error("The `User id` is not valid");
@@ -127,7 +132,7 @@ router.post("/", (req, res, next) => {
 
 /* Put/Edit Rsvp Endpoint  */
 
-router.put("/", (req, res, next) => {
+router.put("/", jwtAuth, (req, res, next) => {
   const { rsvpId, rsvp } = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(rsvpId)) {
@@ -158,7 +163,7 @@ router.put("/", (req, res, next) => {
 
 /* Delete Single Rsvp Endpoint  */
 
-router.delete("/", (req, res, next) => {
+router.delete("/", jwtAuth, (req, res, next) => {
   const id = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -177,8 +182,8 @@ router.delete("/", (req, res, next) => {
 });
 
 // delete rsvp by user id and event id
-router.delete("/user", (req, res, next) => {
-  const {userId, eventId} = req.body;
+router.delete("/user", jwtAuth, (req, res, next) => {
+  const { userId, eventId } = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error("The `id` is not valid");

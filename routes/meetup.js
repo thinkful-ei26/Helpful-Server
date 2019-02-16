@@ -6,9 +6,12 @@ const Event = require("../models/meetup");
 
 const router = express.Router();
 
+/* Jwt Auth */
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
 /* Get All Events Endpoint  */
 
-router.get("/all", (req, res, next) => {
+router.get("/all", jwtAuth, (req, res, next) => {
     /* Validation */
 
     /*            */
@@ -23,7 +26,7 @@ router.get("/all", (req, res, next) => {
 });
 
 /* Get Single Event Endpoint  */
-router.get("/:id", (req, res, next) => {
+router.get("/:id", jwtAuth, (req, res, next) => {
     const id = req.params.id;
     /* Validation */
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -46,7 +49,7 @@ router.get("/:id", (req, res, next) => {
 
 /* Get Events by org Id */
 
-router.get('/owner/:id', (req, res, next) => {
+router.get('/owner/:id', jwtAuth, (req, res, next) => {
     const userId = req.params.id;
     console.log(userId)
     Event.find({ userId })
@@ -62,8 +65,8 @@ router.get('/owner/:id', (req, res, next) => {
 
 /* Post New Event Endpoint  */
 
-router.post("/", (req, res, next) => {
-    let { name, description, location, date, contact, imgUrl, userId } = req.body;
+router.post("/", jwtAuth, (req, res, next) => {
+    let { name, description, location, date, contact, imgUrl } = req.body;
     /* Validation */
     if (!name) {
         const err = new Error("The `name` is not valid");
@@ -100,7 +103,7 @@ router.post("/", (req, res, next) => {
     }
     /*            */
 
-    const newEvent = { name, description, location, date, contact, imgUrl, userId };
+    const newEvent = { name, description, location, date, contact, imgUrl, userId: req.user.id };
     Event.create(newEvent)
         .then(response => {
             res.json(response);
@@ -112,7 +115,7 @@ router.post("/", (req, res, next) => {
 
 /* Put/Edit Event Endpoint  */
 
-router.put("/", (req, res, next) => {
+router.put("/", jwtAuth, (req, res, next) => {
     let { followId, name, location, description, contact, date, imgUrl } = req.body;
     let event = {};
     /* Validation */
@@ -179,7 +182,7 @@ router.put("/", (req, res, next) => {
         }
     }
     /*            */
-
+    event.userId = req.user.id;
     Event.findOneAndUpdate({ _id: followId }, { event })
         .sort({ createdAt: "desc" })
         .then(event => {
@@ -192,7 +195,7 @@ router.put("/", (req, res, next) => {
 
 /* Delete Single Event Endpoint  */
 
-router.delete("/", (req, res, next) => {
+router.delete("/", jwtAuth, (req, res, next) => {
     const id = req.body;
     /* Validation */
     if (!mongoose.Types.ObjectId.isValid(id)) {
