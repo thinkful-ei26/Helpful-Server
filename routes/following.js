@@ -6,9 +6,13 @@ const Following = require("../models/following");
 
 const router = express.Router();
 
+/* Jwt Auth */
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+
 /* Get All Follows Endpoint  */
 
-router.get("/all", (req, res, next) => {
+router.get("/all", jwtAuth, (req, res, next) => {
   /* Validation */
 
   /*            */
@@ -25,8 +29,8 @@ router.get("/all", (req, res, next) => {
 
 /* Get All Roles Endpoint by userId */
 
-router.get("/user/:id", (req, res, next) => {
-  const id = req.params.id;
+router.get("/user", jwtAuth, (req, res, next) => {
+  const id = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
     const err = new Error("The `id` is not valid");
@@ -46,7 +50,7 @@ router.get("/user/:id", (req, res, next) => {
 
 /* Get All Roles Endpoint by orgId */
 
-router.get("/org/:id", (req, res, next) => {
+router.get("/org/:id", jwtAuth, (req, res, next) => {
 
   const id = req.params.id;
   /* Validation */
@@ -68,7 +72,7 @@ router.get("/org/:id", (req, res, next) => {
 
 /* Get Single Follow Endpoint  */
 
-router.get("/:id", (req, res, next) => {
+router.get("/:id", jwtAuth, (req, res, next) => {
   const id = req.params.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -89,7 +93,7 @@ router.get("/:id", (req, res, next) => {
 
 /* Post New Follow Endpoint  */
 
-router.post("/", (req, res, next) => {
+router.post("/", jwtAuth, (req, res, next) => {
   const { userId, orgId } = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -116,7 +120,7 @@ router.post("/", (req, res, next) => {
 
 /* Put/Edit Follow Endpoint  */
 
-router.put("/", (req, res, next) => {
+router.put("/", jwtAuth, (req, res, next) => {
   const { followId, following } = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -142,7 +146,7 @@ router.put("/", (req, res, next) => {
 
 /* Delete Single Follow Endpoint  */
 
-router.delete("/", (req, res, next) => {
+router.delete("/", jwtAuth, (req, res, next) => {
   const id = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {

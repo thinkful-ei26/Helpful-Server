@@ -6,9 +6,12 @@ const Organization = require("../models/organization");
 
 const router = express.Router();
 
+/* Jwt Auth */
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
 /* Get All Organizations Endpoint  */
 
-router.get("/all", (req, res, next) => {
+router.get("/all", jwtAuth, (req, res, next) => {
   /* Validation */
 
   /*            */
@@ -24,7 +27,7 @@ router.get("/all", (req, res, next) => {
 
 /* Get Single Organization Endpoint  */
 
-router.get("/:id", (req, res, next) => {
+router.get("/:id", jwtAuth, (req, res, next) => {
   const id = req.params.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -45,7 +48,7 @@ router.get("/:id", (req, res, next) => {
 
 /* Post New Organization Endpoint  */
 
-router.post("/", (req, res, next) => {
+router.post("/", jwtAuth, (req, res, next) => {
   let { name, description, location, date, contact, imgUrl } = req.body;
   /* Validation */
   if (!name) {
@@ -91,7 +94,7 @@ router.post("/", (req, res, next) => {
 
 /* Put/Edit Organization Endpoint  */
 
-router.put("/", (req, res, next) => {
+router.put("/", jwtAuth, (req, res, next) => {
   let {
     organizationId,
     name,
@@ -179,7 +182,7 @@ router.put("/", (req, res, next) => {
 
 /* Delete Single Organization Endpoint  */
 
-router.delete("/", (req, res, next) => {
+router.delete("/", jwtAuth, (req, res, next) => {
   const id = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
