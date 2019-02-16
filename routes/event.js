@@ -12,7 +12,7 @@ const router = express.Router();
 
 /* Get All Events Endpoint  */
 
-router.get('/all', (req, res, next) => {
+router.get('/all', jwtAuth, (req, res, next) => {
   /* Validation */
 
   /*            */
@@ -28,8 +28,8 @@ router.get('/all', (req, res, next) => {
 });
 
 /* Get Single Event Endpoint  */
-router.get('/:id', (req, res, next) => {
-  const id = req.params.id;
+router.get('/:id', jwtAuth, (req, res, next) => {
+  const userId = req.user.id;
   console.log(id)
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -51,7 +51,7 @@ router.get('/:id', (req, res, next) => {
 
 /* Get Events by org Id */
 
-router.get('/org/:id', (req, res, next) => {
+router.get('/org/:id', jwtAuth, (req, res, next) => {
   const orgId = req.params.id;
   console.log(orgId)
   Event.find({ organizationId: orgId })
@@ -68,7 +68,7 @@ router.get('/org/:id', (req, res, next) => {
 
 /* Post New Event Endpoint  */
 
-router.post("/", (req, res, next) => {
+router.post("/", jwtAuth, (req, res, next) => {
   let { name, description, location, date, contact, imgUrl, orgId } = req.body;
   /* Validation */
   if (!name) {
@@ -123,7 +123,7 @@ router.post("/", (req, res, next) => {
 
 /* Put/Edit Event Endpoint  */
 
-router.put('/', (req, res, next) => {
+router.put('/', jwtAuth, (req, res, next) => {
   let { followId, name, location, description, contact, date, imgUrl } = req.body;
   let event = {};
   /* Validation */
@@ -204,7 +204,7 @@ router.put('/', (req, res, next) => {
 /* Delete Single Event Endpoint  */
 
 
-router.delete("/", (req, res, next) => {
+router.delete("/", jwtAuth, (req, res, next) => {
   const { id } = req.body;
 
   /* Validation */
