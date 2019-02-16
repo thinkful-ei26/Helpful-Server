@@ -93,12 +93,21 @@ router.post("/", jwtAuth, (req, res, next) => {
         err.status = 400;
         return next(err);
     }
+    if (!userId) {
+        const err = new Error("The `userId` is not valid");
+        err.status = 400;
+        return next(err);
+    }
     if (!imgUrl) {
         imgUrl = 'https://dummyimage.com/200x200/000/fff'
     }
     /*            */
 
+<<<<<<< HEAD
     const newEvent = { name, description, location, date, contact, imgUrl, userId: req.user.id };
+=======
+    const newEvent = { name, description, location, date, contact, imgUrl, userId };
+>>>>>>> d55481e11c2e05b95d8a9a1e0a1d9c1d49436c83
     Event.create(newEvent)
         .then(response => {
             res.json(response);
