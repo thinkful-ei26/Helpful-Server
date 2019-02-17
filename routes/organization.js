@@ -1,8 +1,9 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const passport = require("passport");
+'use strict';
+const express = require('express');
+const mongoose = require('mongoose');
+const passport = require('passport');
 
-const Organization = require("../models/organization");
+const Organization = require('../models/organization');
 
 const router = express.Router();
 
@@ -11,12 +12,12 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 /* Get All Organizations Endpoint  */
 
-router.get("/all", jwtAuth, (req, res, next) => {
+router.get('/all', jwtAuth, (req, res, next) => {
   /* Validation */
 
   /*            */
   Organization.find()
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(organizations => {
       res.json(organizations);
     })
@@ -27,17 +28,17 @@ router.get("/all", jwtAuth, (req, res, next) => {
 
 /* Get Single Organization Endpoint  */
 
-router.get("/:id", jwtAuth, (req, res, next) => {
+router.get('/:id', jwtAuth, (req, res, next) => {
   const id = req.params.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
   /*            */
   Organization.findOne({ _id: id })
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(organizations => {
       res.json(organizations);
     })
@@ -48,31 +49,31 @@ router.get("/:id", jwtAuth, (req, res, next) => {
 
 /* Post New Organization Endpoint  */
 
-router.post("/", jwtAuth, (req, res, next) => {
-  let { name, description, location, date, contact, imgUrl } = req.body;
+router.post('/', jwtAuth, (req, res, next) => {
+  let { name, description, location, contact, imgUrl } = req.body;
   /* Validation */
   if (!name) {
-    const err = new Error("The `name` is not valid");
+    const err = new Error('The `name` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!description) {
-    const err = new Error("The `description` is not valid");
+    const err = new Error('The `description` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!location) {
-    const err = new Error("The `location` is not valid");
+    const err = new Error('The `location` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!contact) {
-    const err = new Error("The `contact` is not valid");
+    const err = new Error('The `contact` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!imgUrl) {
-    imgUrl = 'https://dummyimage.com/200x200/000/fff'
+    imgUrl = 'https://dummyimage.com/200x200/000/fff';
   }
   /*            */
 
@@ -89,7 +90,7 @@ router.post("/", jwtAuth, (req, res, next) => {
 
 /* Put/Edit Organization Endpoint  */
 
-router.put("/", jwtAuth, (req, res, next) => {
+router.put('/', jwtAuth, (req, res, next) => {
   let {
     organizationId,
     name,
@@ -102,13 +103,13 @@ router.put("/", jwtAuth, (req, res, next) => {
   let organization = {};
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(followId)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
   if (name) {
     if (typeof name !== String) {
-      const err = new Error("The `name` is not valid");
+      const err = new Error('The `name` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -117,7 +118,7 @@ router.put("/", jwtAuth, (req, res, next) => {
   }
   if (description) {
     if (typeof description !== String) {
-      const err = new Error("The `description` is not valid");
+      const err = new Error('The `description` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -126,7 +127,7 @@ router.put("/", jwtAuth, (req, res, next) => {
   }
   if (location) {
     if (typeof location !== String) {
-      const err = new Error("The `location` is not valid");
+      const err = new Error('The `location` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -135,7 +136,7 @@ router.put("/", jwtAuth, (req, res, next) => {
   }
   if (date) {
     if (typeof date !== String) {
-      const err = new Error("The `date` is not valid");
+      const err = new Error('The `date` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -144,7 +145,7 @@ router.put("/", jwtAuth, (req, res, next) => {
   }
   if (contact) {
     if (typeof contact !== String) {
-      const err = new Error("The `contact` is not valid");
+      const err = new Error('The `contact` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -152,11 +153,11 @@ router.put("/", jwtAuth, (req, res, next) => {
     }
   }
   if (!imgUrl) {
-    imgUrl = 'https://dummyimage.com/200x200/000/fff'
+    imgUrl = 'https://dummyimage.com/200x200/000/fff';
   }
   if (imgUrl) {
     if (typeof imgUrl !== String) {
-      const err = new Error("The `imgUrl` is not valid");
+      const err = new Error('The `imgUrl` is not valid');
       err.status = 400;
       return next(err);
     } else {
@@ -166,7 +167,7 @@ router.put("/", jwtAuth, (req, res, next) => {
   /*            */
 
   Organization.findOneAndUpdate({ _id: organizationId }, { organization })
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(organization => {
       res.json(organization);
     })
@@ -177,11 +178,11 @@ router.put("/", jwtAuth, (req, res, next) => {
 
 /* Delete Single Organization Endpoint  */
 
-router.delete("/", jwtAuth, (req, res, next) => {
+router.delete('/', jwtAuth, (req, res, next) => {
   const id = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }

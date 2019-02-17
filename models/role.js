@@ -1,20 +1,21 @@
+'use strict';
 /* Goal is to have this model represent the roles for organizations linking users and orgs */
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const roleSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   role: { type: String, required: true },
   organizationId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Organization",
+    ref: 'Organization',
     required: true
   }
 });
 
-roleSchema.set("timestamps", true);
+roleSchema.set('timestamps', true);
 roleSchema.index({ userId: 1, organizationId: 1 }, { unique: true });
-roleSchema.set("toJSON", {
+roleSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, result) => {
     delete result._id;
@@ -22,4 +23,4 @@ roleSchema.set("toJSON", {
   }
 });
 
-module.exports = mongoose.model("Role", roleSchema);
+module.exports = mongoose.model('Role', roleSchema);
