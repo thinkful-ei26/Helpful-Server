@@ -6,9 +6,12 @@ const Rsvpmeetup = require("../models/rsvpmeetup");
 
 const router = express.Router();
 
+/* Jwt Auth */
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
 /* Get All Rsvps Endpoint  */
 
-router.get("/all", (req, res, next) => {
+router.get("/all", jwtAuth, (req, res, next) => {
     /* Validation */
 
     /*            */
@@ -25,8 +28,8 @@ router.get("/all", (req, res, next) => {
 
 /* Get All Roles Endpoint by userId */
 
-router.get("/user/:id", (req, res, next) => {
-    const id = req.params.id;
+router.get("/user", jwtAuth, (req, res, next) => {
+    const id = req.user.id;
     /* Validation */
     if (!mongoose.Types.ObjectId.isValid(id)) {
         const err = new Error("The `id` is not valid");
@@ -46,7 +49,7 @@ router.get("/user/:id", (req, res, next) => {
 
 /* Get All Roles Endpoint by orgId */
 
-router.get("/org/:id", (req, res, next) => {
+router.get("/org/:id", jwtAuth, (req, res, next) => {
 
     const id = req.params.id;
     /* Validation */
@@ -70,7 +73,7 @@ router.get("/org/:id", (req, res, next) => {
 
 /* Get Single Rsvp Endpoint  */
 
-router.get("/:id", (req, res, next) => {
+router.get("/:id", jwtAuth, (req, res, next) => {
     const id = req.params.id;
     /* Validation */
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -91,8 +94,10 @@ router.get("/:id", (req, res, next) => {
 
 /* Post New Rsvp Endpoint  */
 
-router.post("/", (req, res, next) => {
-    const { userId, meetupId } = req.body;
+router.post("/", jwtAuth, (req, res, next) => {
+    const meetupId = req.body;
+    const userId = req.user.id;
+
     /* Validation */
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         const err = new Error("The `User id` is not valid");
@@ -118,7 +123,7 @@ router.post("/", (req, res, next) => {
 
 /* Put/Edit Rsvp Endpoint  */
 
-router.put("/", (req, res, next) => {
+router.put("/", jwtAuth, (req, res, next) => {
     const { rsvpId, rsvp } = req.body;
     /* Validation */
     if (!mongoose.Types.ObjectId.isValid(rsvpId)) {
@@ -149,7 +154,7 @@ router.put("/", (req, res, next) => {
 
 /* Delete Single Rsvp Endpoint  */
 
-router.delete("/", (req, res, next) => {
+router.delete("/", jwtAuth, (req, res, next) => {
     const id = req.body;
     /* Validation */
     if (!mongoose.Types.ObjectId.isValid(id)) {
