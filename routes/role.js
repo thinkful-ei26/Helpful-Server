@@ -1,8 +1,9 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const passport = require("passport");
+'use strict';
+const express = require('express');
+const mongoose = require('mongoose');
+const passport = require('passport');
 
-const Role = require("../models/role");
+const Role = require('../models/role');
 
 const router = express.Router();
 
@@ -11,12 +12,12 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 /* Get All Roles Endpoint  */
 
-router.get("/all", jwtAuth, (req, res, next) => {
+router.get('/all', jwtAuth, (req, res, next) => {
   /* Validation */
 
   /*            */
   Role.find()
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(roles => {
       res.json(roles);
     })
@@ -28,17 +29,17 @@ router.get("/all", jwtAuth, (req, res, next) => {
 
 /* Get All Roles Endpoint by userId */
 
-router.get("/user", jwtAuth, (req, res, next) => {
+router.get('/user', jwtAuth, (req, res, next) => {
   const id = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
   /*            */
   Role.find({ userId: id })
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(roles => {
       res.json(roles);
     })
@@ -49,18 +50,18 @@ router.get("/user", jwtAuth, (req, res, next) => {
 
 /* Get All Roles Endpoint by orgId */
 
-router.get("/org/:id", jwtAuth, (req, res, next) => {
+router.get('/org/:id', jwtAuth, (req, res, next) => {
 
   const id = req.params.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
   /*            */
   Role.find({ organizationId: id })
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(roles => {
       res.json(roles);
     })
@@ -72,17 +73,17 @@ router.get("/org/:id", jwtAuth, (req, res, next) => {
 
 /* Get Single Role Endpoint  */
 
-router.get("/:id", jwtAuth, (req, res, next) => {
+router.get('/:id', jwtAuth, (req, res, next) => {
   const id = req.params.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
   /*            */
   Role.findOne({ _id: id })
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(roles => {
       res.json(roles);
     })
@@ -93,27 +94,27 @@ router.get("/:id", jwtAuth, (req, res, next) => {
 
 /* Post New Role Endpoint  */
 
-router.post("/", jwtAuth, (req, res, next) => {
+router.post('/', jwtAuth, (req, res, next) => {
   const { userId, orgId, role } = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-    const err = new Error("The `User id` is not valid");
+    const err = new Error('The `User id` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!mongoose.Types.ObjectId.isValid(orgId)) {
-    const err = new Error("The `Organization id` is not valid");
+    const err = new Error('The `Organization id` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!role) {
-    const err = new Error("Missing `role` in request body");
+    const err = new Error('Missing `role` in request body');
     err.status = 400;
     return next(err);
   }
-  if (typeof role !== "string") {
+  if (typeof role !== 'string') {
     console.log(typeof role);
-    const err = new Error("Error 'role' was not a string");
+    const err = new Error('Error \'role\' was not a string');
     err.status = 400;
     return next(err);
   }
@@ -130,28 +131,28 @@ router.post("/", jwtAuth, (req, res, next) => {
 
 /* Put/Edit Role Endpoint  */
 
-router.put("/", jwtAuth, (req, res, next) => {
+router.put('/', jwtAuth, (req, res, next) => {
   const { roleId, role } = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(roleId)) {
-    const err = new Error("The `role id` is not valid");
+    const err = new Error('The `role id` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!role) {
-    const err = new Error("Missing `role` in request body");
+    const err = new Error('Missing `role` in request body');
     err.status = 400;
     return next(err);
   }
   if (typeof role !== String) {
-    const err = new Error("Error 'role' was not a string");
+    const err = new Error('Error \'role\' was not a string');
     err.status = 400;
     return next(err);
   }
   /*            */
 
   Role.findOneAndUpdate({ _id: roleId }, { role })
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: 'desc' })
     .then(role => {
       res.json(role);
     })
@@ -162,11 +163,11 @@ router.put("/", jwtAuth, (req, res, next) => {
 
 /* Delete Single Role Endpoint  */
 
-router.delete("/", jwtAuth, (req, res, next) => {
+router.delete('/', jwtAuth, (req, res, next) => {
   const id = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error("The `id` is not valid");
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
