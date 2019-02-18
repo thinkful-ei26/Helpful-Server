@@ -36,6 +36,8 @@ router.get("/user", jwtAuth, (req, res, next) => {
   }
   Rsvp.find({ userId })
     .sort({ createdAt: "desc" })
+    // populate event
+    .populate('eventId')
     .then(rsvps => {
       res.json(rsvps);
     })
@@ -105,8 +107,9 @@ router.get("/specific/:eventId", jwtAuth, (req, res, next) => {
 /* Post New Rsvp Endpoint  */
 
 router.post("/", jwtAuth, (req, res, next) => {
-  const eventId = req.body;
+  const { eventId } = req.body;
   const userId = req.user.id;
+
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error("The `User id` is not valid");
@@ -114,7 +117,7 @@ router.post("/", jwtAuth, (req, res, next) => {
     return next(err);
   }
   if (!mongoose.Types.ObjectId.isValid(eventId)) {
-    const err = new Error("The `Organization id` is not valid");
+    const err = new Error("The `Event id` is not valid");
     err.status = 400;
     return next(err);
   }
