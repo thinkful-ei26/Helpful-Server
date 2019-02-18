@@ -91,7 +91,7 @@ router.post('/', jwtAuth, (req, res, next) => {
 
   Organization.create(newOrganization)
     .then(response => {
-      res.json(response); // move down?
+      res.json(response); 
       return response;
     })
     // create admin role
