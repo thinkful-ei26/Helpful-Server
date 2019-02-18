@@ -4,10 +4,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const Organization = require('../models/organization');
-<<<<<<< HEAD
 const Role = require('../models/role');
-=======
->>>>>>> new branch
 
 const router = express.Router();
 
@@ -55,6 +52,8 @@ router.get('/:id', jwtAuth, (req, res, next) => {
 
 router.post('/', jwtAuth, (req, res, next) => {
   let { name, description, location, contact, imgUrl } = req.body;
+  let userId  = req.user.id;
+
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error('The `userId` is not valid');
