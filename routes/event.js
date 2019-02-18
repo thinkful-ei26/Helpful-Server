@@ -10,6 +10,9 @@ const Event = require("../models/event");
 
 const router = express.Router();
 
+/* Jwt Auth */
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
 /* Get All Events Endpoint  */
 
 router.get('/all', jwtAuth, (req, res, next) => {
@@ -30,6 +33,7 @@ router.get('/all', jwtAuth, (req, res, next) => {
 /* Get Single Event Endpoint  */
 router.get('/:id', jwtAuth, (req, res, next) => {
   const userId = req.user.id;
+  const id = req.params.id;
   console.log(id)
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
