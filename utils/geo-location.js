@@ -1,13 +1,12 @@
 const axios = require('axios');
-const { GEO_KEY } = require("../config");
+const { GOOGLE_KEY } = require("../config");
 
-// key needs to be put in .env params
 const geoCode = (address) => {
   try {
     return axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
         params: {
           address,
-          key: GEO_KEY
+          key: GOOGLE_KEY
         }
       });
   } catch (error) {
@@ -23,6 +22,31 @@ const getGeoLocation = async(address) => {
         .catch(error => {
             return error
         })
-  }
+}
 
-module.exports = getGeoLocation;
+const distance = (origins, destinations) => {
+  try {
+    return axios.get('https://maps.googleapis.com/maps/api/distancematrix/json', {
+        params: {
+          units: "imperial",
+          origins,
+          destinations,
+          key: GOOGLE_KEY
+        }
+      });
+  } catch (error) {
+    return error
+  }
+}
+
+const getDistance = async(origins, destinations) => {
+  return distance(origins, destinations)
+      .then(response => {
+        return response.data.rows[0].elements[0].distance.value / 1609.344
+      })
+      .catch(error => {
+          return error
+      })
+}
+
+module.exports = {getGeoLocation, getDistance};

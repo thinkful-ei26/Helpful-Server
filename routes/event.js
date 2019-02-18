@@ -3,9 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-
-const getGeoLocation = require("../utils/geo-location");
+const {getGeoLocation, getDistance} = require("../utils/geo-location");
 const Event = require("../models/event");
+
+/* Jwt Auth */
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
 
 const router = express.Router();
@@ -25,6 +27,31 @@ router.get('/all', jwtAuth, (req, res, next) => {
     .catch(err => {
       next(err);
     });
+});
+
+/* Get all events within x distance */
+router.get('/location/:range', jwtAuth, (req, res, next) => {
+  const {range} = req.params;
+  const {lat, lng} = req.body;
+  const origins = `${lat},${lng}`;
+  /* Validation */
+
+  /*            */
+  Event.find() // maybe query by some small range of lat and lng to condense filter by general area
+    .then(events => {
+      return Promise.all(events.map(event => {
+        let destinations = `${event.geoLocation.lat},${event.geoLocation.lng}`;
+        return getDistance(origins, destinations);
+      }))
+      .then(distances => {
+        let filteredDistances = distances.filter(distance => range >= distance);
+        return res.json(filteredDistances);
+      })
+      .catch(err => {
+        next(err);
+      });
+    })
+    
 });
 
 /* Get Single Event Endpoint  */
