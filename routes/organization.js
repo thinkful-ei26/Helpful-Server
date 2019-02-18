@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const Organization = require('../models/organization');
+const Role = require('../models/role');
 
 const router = express.Router();
 
@@ -51,7 +52,15 @@ router.get('/:id', jwtAuth, (req, res, next) => {
 
 router.post('/', jwtAuth, (req, res, next) => {
   let { name, description, location, contact, imgUrl } = req.body;
+  let userId  = req.user.id;
+
   /* Validation */
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    const err = new Error('The `userId` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
   if (!name) {
     const err = new Error('The `name` is not valid');
     err.status = 400;
@@ -81,7 +90,19 @@ router.post('/', jwtAuth, (req, res, next) => {
 
   Organization.create(newOrganization)
     .then(response => {
-      res.json(response);
+      res.json(response); // move down?
+      return response;
+    })
+    // create admin role
+    .then((newOrg) => {
+      
+      const newAdmin = {
+        userId: userId,
+        role: 'admin',
+        organizationId: newOrg._id,
+      };
+
+      Role.create(newAdmin);
     })
     .catch(err => {
       next(err);
