@@ -6,10 +6,6 @@ const passport = require('passport');
 const {getGeoLocation, getDistance} = require("../utils/geo-location");
 const Event = require("../models/event");
 
-/* Jwt Auth */
-const jwtAuth = passport.authenticate('jwt', { session: false });
-
-
 const router = express.Router();
 
 /* Jwt Auth */
@@ -44,11 +40,16 @@ router.get('/location/:range', jwtAuth, (req, res, next) => {
     .then(events => {
       return Promise.all(events.map(event => {
         let destinations = `${event.geoLocation.lat},${event.geoLocation.lng}`;
-        return getDistance(origins, destinations);
+        return getDistance(origins, destinations)
+        .then(distance => {
+          if(distance <= range) {
+            return event
+          }
+        })
       }))
-      .then(distances => {
-        let filteredDistances = distances.filter(distance => range >= distance);
-        return res.json(filteredDistances);
+      .then(events => {
+        let filtered = events.filter(event => event != null);
+        return res.json(filtered);
       })
       .catch(err => {
         next(err);
