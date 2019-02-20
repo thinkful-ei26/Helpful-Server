@@ -20,7 +20,6 @@ router.get('/all', jwtAuth, (req, res, next) => {
   Event.find()
     .sort({ createdAt: 'desc' })
     .then(events => {
-      console.log(events)
       res.json(events);
     })
     .catch(err => {
@@ -29,13 +28,13 @@ router.get('/all', jwtAuth, (req, res, next) => {
 });
 
 /* Get all events within x distance */
-router.get('/location/:range', jwtAuth, (req, res, next) => {
-  const {range} = req.params;
-  const {lat, lng} = req.body;
+router.get('/location/:range/:lat/:lng', jwtAuth, (req, res, next) => {
+  const {range, lat, lng} = req.params;
   const origins = `${lat},${lng}`;
   /* Validation */
 
   /*            */
+  console.log('params ', req.params)
   Event.find() // maybe query by some small range of lat and lng to condense filter by general area
     .then(events => {
       return Promise.all(events.map(event => {
