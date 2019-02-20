@@ -11,6 +11,7 @@ const eventRouter = require('./routes/event');
 const roleRouter = require('./routes/role');
 const rsvpRouter = require('./routes/rsvp');
 const meetupRouter = require('./routes/rsvpmeetup');
+const commentRouter = require('./routes/comments');
 const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
