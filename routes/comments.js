@@ -70,7 +70,7 @@ router.get('/user/all', jwtAuth, (req, res, next) => {
 /* Post New Event Endpoint  */
 
 router.post('/', jwtAuth, (req, res, next) => {
-  const { orgId,comment, description } = req.body;
+  const { orgId, comment, description } = req.body;
   const userId = req.user.id;
 
   /* Validation */
@@ -96,7 +96,7 @@ router.post('/', jwtAuth, (req, res, next) => {
   }
   /*            */
 
-  const newComment = { userId,comment, description, organizationId: orgId };
+  const newComment = { userId, comment, description, organizationId: orgId };
   Comments.create(newComment)
     .then(response => {
       res.json(response);
@@ -107,7 +107,7 @@ router.post('/', jwtAuth, (req, res, next) => {
 });
 
 router.put('/', jwtAuth, (req, res, next) => {
-  let {comment, description, orgId } = req.body;
+  let { comment, description, orgId } = req.body;
   const userId = req.user.id;
   let Comments = {};
   /* Validation */
@@ -127,7 +127,7 @@ router.put('/', jwtAuth, (req, res, next) => {
       err.status = 400;
       return next(err);
     } else {
-      Comments.rating =comment;
+      Comments.rating = comment;
     }
   }
   if (description) {
