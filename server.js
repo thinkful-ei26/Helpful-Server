@@ -12,6 +12,7 @@ const roleRouter = require('./routes/role');
 const rsvpRouter = require('./routes/rsvp');
 const meetupRouter = require('./routes/rsvpmeetup');
 const commentRouter = require('./routes/comments');
+const orgratingRouter = require('./routes/orgrating');
 const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
@@ -48,6 +49,7 @@ app.use('/rsvp', rsvpRouter);
 app.use('/meetup', meetupRouter);
 app.use('/role', roleRouter);
 app.use('/comments', commentRouter);
+app.use('/orgrating', orgratingRouter);
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 // A protected endpoint which needs a valid JWT to access it
