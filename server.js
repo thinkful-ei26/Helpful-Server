@@ -47,7 +47,7 @@ app.use('/follow', followRouter);
 app.use('/rsvp', rsvpRouter);
 app.use('/meetup', meetupRouter);
 app.use('/role', roleRouter);
-app.use('comments', commentsRouter);
+app.use('/comments', commentRouter);
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 // A protected endpoint which needs a valid JWT to access it
