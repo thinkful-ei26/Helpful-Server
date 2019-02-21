@@ -147,9 +147,7 @@ router.post("/", jwtAuth, (req, res, next) => {
         .catch(err => {
           next(err);
         });
-    })
-
-
+    });
 });
 
 /* Put/Edit Event Endpoint  */
