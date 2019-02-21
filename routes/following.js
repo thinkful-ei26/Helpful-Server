@@ -41,6 +41,7 @@ router.get("/user", jwtAuth, (req, res, next) => {
   /*            */
   Following.find({ userId: id })
     .sort({ createdAt: "desc" })
+    .populate('organizationId')
     .then(follows => {
       res.json(follows);
     })
