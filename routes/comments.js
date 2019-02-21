@@ -70,17 +70,17 @@ router.get('/user/all', jwtAuth, (req, res, next) => {
 /* Post New Comment Endpoint  */
 
 router.post('/', jwtAuth, (req, res, next) => {
-  const { orgId, comment, description } = req.body;
+  const { orgId, comment } = req.body;
   const userId = req.user.id;
 
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-    const err = new Error('The `id` is not valid');
+    const err = new Error('The `userId` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!mongoose.Types.ObjectId.isValid(orgId)) {
-    const err = new Error('The `id` is not valid');
+    const err = new Error('The `orgId` is not valid');
     err.status = 400;
     return next(err);
   }
@@ -89,14 +89,10 @@ router.post('/', jwtAuth, (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  if (!description) {
-    const err = new Error('The `description` is not valid');
-    err.status = 400;
-    return next(err);
-  }
+
   /*            */
 
-  const newComment = { userId, comment, description, organizationId: orgId };
+  const newComment = { userId, comment, organizationId: orgId };
   Comment.create(newComment)
     .then(response => {
       res.json(response);
@@ -107,7 +103,7 @@ router.post('/', jwtAuth, (req, res, next) => {
 });
 
 router.put('/', jwtAuth, (req, res, next) => {
-  let { comment, description, orgId } = req.body;
+  let { comment,orgId } = req.body;
   const userId = req.user.id;
   let Comment = {};
   /* Validation */
@@ -130,15 +126,15 @@ router.put('/', jwtAuth, (req, res, next) => {
       Comment.rating = comment;
     }
   }
-  if (description) {
-    if (typeof description !== String) {
-      const err = new Error('The `description` is not valid');
-      err.status = 400;
-      return next(err);
-    } else {
-      Comment.description = description;
-    }
-  }
+//   if (description) {
+//     if (typeof description !== String) {
+//       const err = new Error('The `description` is not valid');
+//       err.status = 400;
+//       return next(err);
+//     } else {
+//       Comment.description = description;
+//     }
+//   }
   /*            */
 
   Comment.findOneAndUpdate({ userId, organizationId: orgId }, { Comment })

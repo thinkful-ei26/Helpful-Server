@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const commentSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   comment: { type: String, required: true },
-  description: { type: String, required: true },
+  // description: { type: String, required: true },
   organizationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organization',
@@ -15,7 +15,7 @@ const commentSchema = new mongoose.Schema({
 });
 
 commentSchema.set('timestamps', true);
-commentSchema.index({ userId: 1, organizationId: 1 }, { unique: true });
+commentSchema.index({ userId: 1, organizationId: 1, comment:1 }, { unique: true });
 commentSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, result) => {
