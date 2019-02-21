@@ -40,6 +40,7 @@ router.get('/user', jwtAuth, (req, res, next) => {
   /*            */
   Role.find({ userId: id })
     .sort({ createdAt: 'desc' })
+    .populate('organizationId')
     .then(roles => {
       res.json(roles);
     })
