@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-const {getGeoLocation, getDistance} = require("../utils/geo-location");
+const { getGeoLocation, getDistance } = require("../utils/geo-location");
 const Event = require("../models/event");
 
 const router = express.Router();
@@ -29,7 +29,7 @@ router.get('/all', jwtAuth, (req, res, next) => {
 
 /* Get all events within x distance */
 router.get('/location/:range/:lat/:lng', jwtAuth, (req, res, next) => {
-  const {range, lat, lng} = req.params;
+  const { range, lat, lng } = req.params;
   const origins = `${lat},${lng}`;
   /* Validation */
 
@@ -40,21 +40,22 @@ router.get('/location/:range/:lat/:lng', jwtAuth, (req, res, next) => {
       return Promise.all(events.map(event => {
         let destinations = `${event.geoLocation.lat},${event.geoLocation.lng}`;
         return getDistance(origins, destinations)
-        .then(distance => {
-          if(distance <= range) {
-            return event
-          }
-        })
+          .then(distance => {
+            if (distance <= range) {
+              return event
+            }
+          })
       }))
-      .then(events => {
-        let filtered = events.filter(event => event != null);
-        return res.json(filtered);
-      })
-      .catch(err => {
-        next(err);
-      });
+        .then(events => {
+          let filtered = events.filter(event => event != null);
+          console.log(filtered)
+          return res.json(filtered);
+        })
+        .catch(err => {
+          next(err);
+        });
     })
-    
+
 });
 
 /* Get Single Event Endpoint  */

@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const { getGeoLocation, getDistance } = require("../utils/geo-location");
 
 const Organization = require('../models/organization');
 const Role = require('../models/role');
@@ -25,6 +26,39 @@ router.get('/all', jwtAuth, (req, res, next) => {
     .catch(err => {
       next(err);
     });
+});
+
+/* Get all events within x distance */
+router.get('/location/:range/:lat/:lng', jwtAuth, (req, res, next) => {
+  const { range, lat, lng } = req.params;
+  const origins = `${lat},${lng}`;
+  /* Validation */
+
+  /*            */
+  Organization.find() // maybe query by some small range of lat and lng to condense filter by general area
+    .then(orgs => {
+      return Promise.all(orgs.map(org => {
+        let destinations = `${org.geoLocation.lat},${org.geoLocation.lng}`;
+        return getDistance(origins, destinations)
+          .then(distance => {
+            if (distance <= range) {
+              return org
+            }
+          })
+      }))
+        .then(orgs => {
+          let filtered = orgs.filter(org => org != null);
+          console.log(filtered)
+          return res.json(filtered);
+        })
+        .catch(err => {
+          next(err);
+        });
+    })
+    .catch(err => {
+      next(err);
+    });
+
 });
 
 /* Get Single Organization Endpoint  */
@@ -52,7 +86,7 @@ router.get('/:id', jwtAuth, (req, res, next) => {
 
 router.post('/', jwtAuth, (req, res, next) => {
   let { name, description, location, contact, imgUrl } = req.body;
-  let userId  = req.user.id;
+  let userId = req.user.id;
 
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -86,23 +120,30 @@ router.post('/', jwtAuth, (req, res, next) => {
   }
   /*            */
 
-  const newOrganization = { name, description, location, contact, imgUrl };
+  getGeoLocation(location)
+    .then(geoLocation => {
+      const newOrganization = { name, description, location, geoLocation, contact, imgUrl };
 
-  Organization.create(newOrganization)
-    .then(response => {
-      res.json(response); 
-      return response;
-    })
-    // create admin role
-    .then((newOrg) => {
-      
-      const newAdmin = {
-        userId: userId,
-        role: 'admin',
-        organizationId: newOrg._id,
-      };
+      Organization.create(newOrganization)
+        .then(response => {
+          res.json(response);
+          return response;
+        })
+        // create admin role
+        .then((newOrg) => {
 
-      Role.create(newAdmin);
+          const newAdmin = {
+            userId: userId,
+            role: 'admin',
+            organizationId: newOrg._id,
+          };
+
+          Role.create(newAdmin);
+        })
+        .catch(err => {
+          next(err);
+        });
+
     })
     .catch(err => {
       next(err);
