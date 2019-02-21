@@ -2,9 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
-
 const Orgrating = require('../models/orgrating');
-
 const router = express.Router();
 
 /* JWT Auth */

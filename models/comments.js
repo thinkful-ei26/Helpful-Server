@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const commentsSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   comment: { type: String, required: true },
+  description: { type: String, required: true },
   organizationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organization',
@@ -23,4 +24,4 @@ commentsSchema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('comments', commentsSchema);
+module.exports = mongoose.model('Comments', commentsSchema);
