@@ -16,6 +16,7 @@ const orgratingRouter = require('./routes/orgrating');
 const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
+
 mongoose.Promise = global.Promise;
 
 const { PORT, DATABASE_URL } = require('./config');
