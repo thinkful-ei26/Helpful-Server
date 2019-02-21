@@ -2,8 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
-
-const Comments = require('../models/comments');
+const Comment = require('../models/comments');
 
 const router = express.Router();
 
@@ -13,8 +12,9 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 /* Get all  */
 
-router.get('/', jwtAuth, (req, res, next) => {
-  Comments.find()
+router.get('/', (req, res, next) => {
+  console.log('***********');
+  Comment.find()
     .sort({ createdAt: 'desc' })
     .then(comments => {
       res.json(comments);
@@ -26,9 +26,9 @@ router.get('/', jwtAuth, (req, res, next) => {
 
 /* Get all per comments an organization  */
 
-router.get('/comments', jwtAuth, (req, res, next) => {
+router.get('/org', jwtAuth, (req, res, next) => {
   const orgId = req.body;
-  Comments.find({ organizationId: orgId })
+  Comment.find({ organizationId: orgId })
     .sort({ createdAt: 'desc' })
     .then(comments => {
       res.json(comments);
@@ -38,12 +38,12 @@ router.get('/comments', jwtAuth, (req, res, next) => {
     });
 });
 
-/* Get a specificcomment via userid and organization id  */
+/* Get a specific comment via userid and organization id  */
 
 router.get('/user', jwtAuth, (req, res, next) => {
   const orgId = req.body;
   const userId = req.user.id;
-  Comments.find({ userId, organizationId: orgId })
+  Comment.find({ userId, organizationId: orgId })
     .sort({ createdAt: 'desc' })
     .then(comments => {
       res.json(comments);
@@ -57,7 +57,7 @@ router.get('/user', jwtAuth, (req, res, next) => {
 
 router.get('/user/all', jwtAuth, (req, res, next) => {
   const userId = req.user.id;
-  Comments.find({ userId })
+  Comment.find({ userId })
     .sort({ createdAt: 'desc' })
     .then(comments => {
       res.json(comments);
@@ -67,7 +67,7 @@ router.get('/user/all', jwtAuth, (req, res, next) => {
     });
 });
 
-/* Post New Event Endpoint  */
+/* Post New Comment Endpoint  */
 
 router.post('/', jwtAuth, (req, res, next) => {
   const { orgId, comment, description } = req.body;
@@ -97,7 +97,7 @@ router.post('/', jwtAuth, (req, res, next) => {
   /*            */
 
   const newComment = { userId, comment, description, organizationId: orgId };
-  Comments.create(newComment)
+  Comment.create(newComment)
     .then(response => {
       res.json(response);
     })
@@ -109,7 +109,7 @@ router.post('/', jwtAuth, (req, res, next) => {
 router.put('/', jwtAuth, (req, res, next) => {
   let { comment, description, orgId } = req.body;
   const userId = req.user.id;
-  let Comments = {};
+  let Comment = {};
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error('The `userid` is not valid');
@@ -127,7 +127,7 @@ router.put('/', jwtAuth, (req, res, next) => {
       err.status = 400;
       return next(err);
     } else {
-      Comments.rating = comment;
+      Comment.rating = comment;
     }
   }
   if (description) {
@@ -136,12 +136,12 @@ router.put('/', jwtAuth, (req, res, next) => {
       err.status = 400;
       return next(err);
     } else {
-      Comments.description = description;
+      Comment.description = description;
     }
   }
   /*            */
 
-  Comments.findOneAndUpdate({ userId, organizationId: orgId }, { Comments })
+  Comment.findOneAndUpdate({ userId, organizationId: orgId }, { Comment })
     .sort({ createdAt: 'desc' })
     .then(event => {
       res.json(event);
@@ -154,7 +154,7 @@ router.put('/', jwtAuth, (req, res, next) => {
 router.delete('/', jwtAuth, (req, res, next) => {
   const { orgId } = req.body;
   const userId = req.user.id;
-  Comments.findOneAndDelete({ userId, orgId })
+  Comment.findOneAndDelete({ userId, orgId })
     .then(rating => {
       res.json(rating);
     })

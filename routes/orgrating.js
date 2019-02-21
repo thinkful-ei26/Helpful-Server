@@ -24,8 +24,8 @@ router.get('/', jwtAuth, (req, res, next) => {
 
 /* Get all per ratings an organization  */
 
-router.get('/org', jwtAuth, (req, res, next) => {
-  const orgId = req.body;
+router.get('/org/:orgId', jwtAuth, (req, res, next) => {
+  const orgId = req.params.orgId;
   Orgrating.find({ organizationId: orgId })
     .sort({ createdAt: 'desc' })
     .then(ratings => {
@@ -65,7 +65,7 @@ router.get('/user/all', jwtAuth, (req, res, next) => {
     });
 });
 
-/* Post New Event Endpoint  */
+/* Post New Rating Endpoint  */
 
 router.post('/', jwtAuth, (req, res, next) => {
   const { orgId, rating, description } = req.body;
