@@ -10,7 +10,7 @@ const followRouter = require("./routes/following");
 const eventRouter = require("./routes/event");
 const roleRouter = require("./routes/role");
 const rsvpRouter = require("./routes/rsvp");
-const meetupRouter = require("./routes/rsvpmeetup");
+const meetupRouter = require("./routes/meetup");
 const { router: usersRouter } = require("./users");
 const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 
