@@ -68,7 +68,7 @@ router.get('/user/all', jwtAuth, (req, res, next) => {
 /* Post New Rating Endpoint  */
 
 router.post('/', jwtAuth, (req, res, next) => {
-  const { orgId, rating, description } = req.body;
+  const { orgId, rating } = req.body;
   const userId = req.user.id;
 
   /* Validation */
@@ -87,14 +87,9 @@ router.post('/', jwtAuth, (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  if (!description) {
-    const err = new Error('The `description` is not valid');
-    err.status = 400;
-    return next(err);
-  }
   /*            */
 
-  const newRating = { userId, rating, description, organizationId: orgId };
+  const newRating = { userId, rating,  organizationId: orgId };
   Orgrating.create(newRating)
     .then(response => {
       res.json(response);
@@ -128,15 +123,15 @@ router.put('/', jwtAuth, (req, res, next) => {
       orgrating.rating = rating;
     }
   }
-  if (description) {
-    if (typeof description !== String) {
-      const err = new Error('The `description` is not valid');
-      err.status = 400;
-      return next(err);
-    } else {
-      orgrating.description = description;
-    }
-  }
+  // if (description) {
+  //   if (typeof description !== String) {
+  //     const err = new Error('The `description` is not valid');
+  //     err.status = 400;
+  //     return next(err);
+  //   } else {
+  //     orgrating.description = description;
+  //   }
+  // }
   /*            */
 
   Orgrating.findOneAndUpdate({ userId, organizationId: orgId }, { orgrating })
