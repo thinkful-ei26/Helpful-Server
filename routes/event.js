@@ -73,6 +73,7 @@ router.get('/:id', jwtAuth, (req, res, next) => {
 
   Event.findOne({ _id: id })
     .sort({ createdAt: 'desc' })
+    .populate('organizationId')
     .then(events => {
       res.json(events);
     })
