@@ -186,7 +186,8 @@ router.delete("/", jwtAuth, (req, res, next) => {
 
 // delete rsvp by user id and event id
 router.delete("/user", jwtAuth, (req, res, next) => {
-  const { userId, eventId } = req.body;
+  const { eventId } = req.body;
+  const userId = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     const err = new Error("The `id` is not valid");
