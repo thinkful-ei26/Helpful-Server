@@ -73,12 +73,12 @@ router.post('/', jwtAuth, (req, res, next) => {
 
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-    const err = new Error('The `id` is not valid');
+    const err = new Error('The `userId` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!mongoose.Types.ObjectId.isValid(orgId)) {
-    const err = new Error('The `id` is not valid');
+    const err = new Error('The `orgId` is not valid');
     err.status = 400;
     return next(err);
   }
