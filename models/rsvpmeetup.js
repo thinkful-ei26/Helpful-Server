@@ -5,9 +5,9 @@ const mongoose = require("mongoose");
 const rsvpMeetupSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     rsvp: { type: Boolean, required: true },
-    meetupId: {
+    eventId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
+        ref: "Meetup",
         required: true
     }
 });

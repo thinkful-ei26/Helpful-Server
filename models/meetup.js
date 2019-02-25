@@ -10,7 +10,7 @@ const meetupSchema = new mongoose.Schema({
     date: { type: String, required: true },
     contact: { type: String, required: true },
     imgUrl: { type: String, required: true },
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true }
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
 });
 
 /* Date the organization was first on the platform*/

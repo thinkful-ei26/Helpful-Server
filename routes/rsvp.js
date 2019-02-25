@@ -167,7 +167,7 @@ router.put("/", jwtAuth, (req, res, next) => {
 /* Delete Single Rsvp Endpoint  */
 
 router.delete("/", jwtAuth, (req, res, next) => {
-  const id = req.body;
+  const {id} = req.body;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(id)) {
     const err = new Error("The `id` is not valid");

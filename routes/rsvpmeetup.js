@@ -26,7 +26,7 @@ router.get("/all", jwtAuth, (req, res, next) => {
 });
 
 
-/* Get All Roles Endpoint by userId */
+/* Get All meetup rsvps Endpoint by userId */
 
 router.get("/user", jwtAuth, (req, res, next) => {
     const id = req.user.id;
@@ -39,6 +39,7 @@ router.get("/user", jwtAuth, (req, res, next) => {
     /*            */
     Rsvpmeetup.find({ userId: id })
         .sort({ createdAt: "desc" })
+        .populate("eventId")
         .then(roles => {
             res.json(roles);
         })
@@ -92,10 +93,29 @@ router.get("/:id", jwtAuth, (req, res, next) => {
         });
 });
 
+router.get("/meetup/:id", jwtAuth, (req, res, next) => {
+    const id = req.params.id;
+    /* Validation */
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        const err = new Error("The `id` is not valid");
+        err.status = 400;
+        return next(err);
+    }
+    /*            */
+    Rsvpmeetup.findOne({ eventId: id })
+        .sort({ createdAt: "desc" })
+        .then(rsvps => {
+            res.json(rsvps);
+        })
+        .catch(err => {
+            next(err);
+        });
+});
+
 /* Post New Rsvp Endpoint  */
 
 router.post("/", jwtAuth, (req, res, next) => {
-    const meetupId = req.body;
+    const {eventId} = req.body;
     const userId = req.user.id;
 
     /* Validation */
@@ -104,13 +124,13 @@ router.post("/", jwtAuth, (req, res, next) => {
         err.status = 400;
         return next(err);
     }
-    if (!mongoose.Types.ObjectId.isValid(meetupId)) {
-        const err = new Error("The `Organization id` is not valid");
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+        const err = new Error("The `Meetup id` is not valid");
         err.status = 400;
         return next(err);
     }
     /*            */
-    const newRsvp = { userId, rsvp: true, meetupId };
+    const newRsvp = { userId, rsvp: true, eventId };
 
     Rsvpmeetup.create(newRsvp)
         .then(response => {
@@ -155,15 +175,15 @@ router.put("/", jwtAuth, (req, res, next) => {
 /* Delete Single Rsvp Endpoint  */
 
 router.delete("/", jwtAuth, (req, res, next) => {
-    const id = req.body;
+    const {eventId} = req.body;
     /* Validation */
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
         const err = new Error("The `id` is not valid");
         err.status = 400;
         return next(err);
     }
     /*            */
-    Rsvpmeetup.findOneAndDelete({ _id: id })
+    Rsvpmeetup.findOneAndDelete({ eventId })
         .then(rsvp => {
             res.json(rsvp);
         })
