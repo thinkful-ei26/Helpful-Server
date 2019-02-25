@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const orgRatingSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   rating: { type: Number, required: true },
-  description: { type: String, required: true },
   organizationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organization',

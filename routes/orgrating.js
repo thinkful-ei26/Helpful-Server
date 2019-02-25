@@ -29,12 +29,25 @@ router.get('/org/:orgId', jwtAuth, (req, res, next) => {
   Orgrating.find({ organizationId: orgId })
     .sort({ createdAt: 'desc' })
     .then(ratings => {
-      res.json(ratings);
+      let result = ratings.map(item => {
+        return item.rating;
+      });
+      const avg = result.reduce((a, b) => a + b, 0) / result.length;
+      console.log(avg);
+      res.json({ avg, length: result.length });
     })
     .catch(err => {
       next(err);
     });
 });
+//  const ratingAvg = ratings => {
+//       let result = [];
+//       ratings.map(obj => {
+//           result.push(obj.rating);
+//       });
+//       const avg = result.reduce((a, b) => a + b, 0) / result.length;
+//       return Math.round(avg * 100) / 100;
+//   };
 
 /* Get a specific rating via userid and organization id  */
 
@@ -68,17 +81,17 @@ router.get('/user/all', jwtAuth, (req, res, next) => {
 /* Post New Rating Endpoint  */
 
 router.post('/', jwtAuth, (req, res, next) => {
-  const { orgId, rating, description } = req.body;
+  const { orgId, rating } = req.body;
   const userId = req.user.id;
 
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-    const err = new Error('The `id` is not valid');
+    const err = new Error('The `userId` is not valid');
     err.status = 400;
     return next(err);
   }
   if (!mongoose.Types.ObjectId.isValid(orgId)) {
-    const err = new Error('The `id` is not valid');
+    const err = new Error('The `orgId` is not valid');
     err.status = 400;
     return next(err);
   }
@@ -87,14 +100,9 @@ router.post('/', jwtAuth, (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  if (!description) {
-    const err = new Error('The `description` is not valid');
-    err.status = 400;
-    return next(err);
-  }
   /*            */
 
-  const newRating = { userId, rating, description, organizationId: orgId };
+  const newRating = { userId, rating, organizationId: orgId };
   Orgrating.create(newRating)
     .then(response => {
       res.json(response);
@@ -128,15 +136,15 @@ router.put('/', jwtAuth, (req, res, next) => {
       orgrating.rating = rating;
     }
   }
-  if (description) {
-    if (typeof description !== String) {
-      const err = new Error('The `description` is not valid');
-      err.status = 400;
-      return next(err);
-    } else {
-      orgrating.description = description;
-    }
-  }
+  // if (description) {
+  //   if (typeof description !== String) {
+  //     const err = new Error('The `description` is not valid');
+  //     err.status = 400;
+  //     return next(err);
+  //   } else {
+  //     orgrating.description = description;
+  //   }
+  // }
   /*            */
 
   Orgrating.findOneAndUpdate({ userId, organizationId: orgId }, { orgrating })
