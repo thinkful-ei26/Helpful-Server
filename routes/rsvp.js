@@ -87,7 +87,7 @@ router.get("/:id", jwtAuth, (req, res, next) => {
 
 // get rsvp by userId and eventId
 router.get("/specific/:eventId", jwtAuth, (req, res, next) => {
-  const eventId = req.params;
+  const {eventId} = req.params;
   const userId = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -185,8 +185,8 @@ router.delete("/", jwtAuth, (req, res, next) => {
 });
 
 // delete rsvp by user id and event id
-router.delete("/user", jwtAuth, (req, res, next) => {
-  const { eventId } = req.body;
+router.delete("/user/:eventId", jwtAuth, (req, res, next) => {
+  const {eventId} = req.params;
   const userId = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {

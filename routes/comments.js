@@ -7,13 +7,10 @@ const Comment = require('../models/comments');
 const router = express.Router();
 
 /* JWT Auth */
-
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 /* Get all  */
-
 router.get('/', (req, res, next) => {
-  console.log('***********');
   Comment.find()
     .sort({ createdAt: 'desc' })
     .then(comments => {
@@ -24,11 +21,10 @@ router.get('/', (req, res, next) => {
     });
 });
 
-/* Get all per comments an organization  */
-
-router.get('/org', jwtAuth, (req, res, next) => {
-  const orgId = req.body;
-  Comment.find({ organizationId: orgId })
+/* Get all comments for an event */
+router.get('/event/:eventId', jwtAuth, (req, res, next) => {
+  const {eventId} = req.params;
+  Comment.find({ eventId })
     .sort({ createdAt: 'desc' })
     .then(comments => {
       res.json(comments);
@@ -38,23 +34,21 @@ router.get('/org', jwtAuth, (req, res, next) => {
     });
 });
 
-/* Get a specific comment via userid and organization id  */
-
-router.get('/user', jwtAuth, (req, res, next) => {
-  const orgId = req.body;
-  const userId = req.user.id;
-  Comment.find({ userId, organizationId: orgId })
-    .sort({ createdAt: 'desc' })
-    .then(comments => {
-      res.json(comments);
-    })
-    .catch(err => {
-      next(err);
-    });
-});
+// /* Get a specific comment via userid and organization id  */
+// router.get('/user', jwtAuth, (req, res, next) => {
+//   const orgId = req.body;
+//   const userId = req.user.id;
+//   Comment.find({ userId, organizationId: orgId })
+//     .sort({ createdAt: 'desc' })
+//     .then(comments => {
+//       res.json(comments);
+//     })
+//     .catch(err => {
+//       next(err);
+//     });
+// });
 
 /* Get all comments from a user */
-
 router.get('/user/all', jwtAuth, (req, res, next) => {
   const userId = req.user.id;
   Comment.find({ userId })
@@ -68,9 +62,8 @@ router.get('/user/all', jwtAuth, (req, res, next) => {
 });
 
 /* Post New Comment Endpoint  */
-
 router.post('/', jwtAuth, (req, res, next) => {
-  const { orgId, comment } = req.body;
+  const { eventId, comment } = req.body;
   const userId = req.user.id;
 
   /* Validation */
@@ -79,8 +72,8 @@ router.post('/', jwtAuth, (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  if (!mongoose.Types.ObjectId.isValid(orgId)) {
-    const err = new Error('The `orgId` is not valid');
+  if (!mongoose.Types.ObjectId.isValid(eventId)) {
+    const err = new Error('The `eventId` is not valid');
     err.status = 400;
     return next(err);
   }
@@ -92,7 +85,7 @@ router.post('/', jwtAuth, (req, res, next) => {
 
   /*            */
 
-  const newComment = { userId, comment, organizationId: orgId };
+  const newComment = { userId, comment, eventId };
   Comment.create(newComment)
     .then(response => {
       res.json(response);
