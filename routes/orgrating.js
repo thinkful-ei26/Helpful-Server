@@ -29,12 +29,25 @@ router.get('/org/:orgId', jwtAuth, (req, res, next) => {
   Orgrating.find({ organizationId: orgId })
     .sort({ createdAt: 'desc' })
     .then(ratings => {
-      res.json(ratings);
+      let result = ratings.map(item => {
+        return item.rating;
+      });
+      const avg = result.reduce((a, b) => a + b, 0) / result.length;
+      console.log(avg);
+      res.json({ avg, length: result.length });
     })
     .catch(err => {
       next(err);
     });
 });
+//  const ratingAvg = ratings => {
+//       let result = [];
+//       ratings.map(obj => {
+//           result.push(obj.rating);
+//       });
+//       const avg = result.reduce((a, b) => a + b, 0) / result.length;
+//       return Math.round(avg * 100) / 100;
+//   };
 
 /* Get a specific rating via userid and organization id  */
 
@@ -89,7 +102,7 @@ router.post('/', jwtAuth, (req, res, next) => {
   }
   /*            */
 
-  const newRating = { userId, rating,  organizationId: orgId };
+  const newRating = { userId, rating, organizationId: orgId };
   Orgrating.create(newRating)
     .then(response => {
       res.json(response);
