@@ -185,8 +185,8 @@ router.delete("/", jwtAuth, (req, res, next) => {
 });
 
 // delete rsvp by user id and event id
-router.delete("/user/:eventId", jwtAuth, (req, res, next) => {
-  const {eventId} = req.params;
+router.delete("/user", jwtAuth, (req, res, next) => {
+  const {eventId} = req.body;
   const userId = req.user.id;
   /* Validation */
   if (!mongoose.Types.ObjectId.isValid(userId)) {
