@@ -25,6 +25,20 @@ router.get("/all", jwtAuth, (req, res, next) => {
         });
 });
 
+/* Get Meetup by user Id */
+router.get('/owner', jwtAuth, (req, res, next) => {
+    const userId = req.user.id;
+    console.log(userId)
+    Meetup.find({ userId })
+        .sort({ createdAt: "desc" })
+        .then(meetups => {
+            res.json(meetups);
+        })
+        .catch(err => {
+            next(err);
+        });
+})
+
 /* Get Single Meetup Endpoint  */
 router.get("/:id", jwtAuth, (req, res, next) => {
     const id = req.params.id;
@@ -38,6 +52,7 @@ router.get("/:id", jwtAuth, (req, res, next) => {
 
     Meetup.findOne({ _id: id })
         .sort({ createdAt: "desc" })
+        .populate("userId")
         .then(events => {
             res.json(events);
         })
@@ -47,19 +62,7 @@ router.get("/:id", jwtAuth, (req, res, next) => {
 });
 
 
-/* Get Meetup by user Id */
-router.get('/owner/:id', jwtAuth, (req, res, next) => {
-    const userId = req.params.id;
-    console.log(userId)
-    Meetup.find({ userId })
-        .sort({ createdAt: "desc" })
-        .then(meetups => {
-            res.json(meetups);
-        })
-        .catch(err => {
-            next(err);
-        });
-})
+
 
 /* Post New Meetup Endpoint  */
 router.post("/", jwtAuth, (req, res, next) => {
