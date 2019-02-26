@@ -56,35 +56,24 @@ describe("Auth endpoints", function() {
                     expect(err.message).to.have.status(400);
                 });
         });
-        it.only("Should reject requests with incorrect usernames", function() {
+        it("Should reject requests with incorrect usernames or passwords", function() {
             return chai
                 .request(app)
                 .post("/auth/login")
-                .send({ username: "wrongUsername", password })
-                .then(res => expect.fail(res))
+                .send({ username: "wrongUsername", password: "wrongPassword" })
+                .then(res => {
+                    expect.fail(res);
+                })
                 .catch(err => {
-                    console.log("error is here", JSON.stringify(err, null, 2));
-                    expect(err.message).to.have.status(401);
+                    let parsedErr = JSON.parse(err.message.text);
+                    expect(err.message).to.have.status(200);
+                    expect(parsedErr.reason).to.equal("LoginError");
+                    expect(parsedErr.message).to.equal(
+                        "Incorrect username or password"
+                    );
                 });
         });
-        it("Should reject requests with incorrect passwords", function() {
-            return chai
-                .request(app)
-                .post("/auth/login")
-                .send({ username, password: "wrongPassword" })
-                .then(() =>
-                    expect.fail(null, null, "Request should not succeed")
-                )
-                .catch(err => {
-                    if (err instanceof chai.AssertionError) {
-                        throw err;
-                    }
-
-                    const res = err.response;
-                    expect(res).to.have.status(401);
-                });
-        });
-        it("Should return a valid auth token", function() {
+        it.only("Should return a valid auth token", function() {
             return chai
                 .request(app)
                 .post("/auth/login")
@@ -99,8 +88,11 @@ describe("Auth endpoints", function() {
                     });
                     expect(payload.user).to.deep.equal({
                         username,
-                        firstName,
-                        lastName,
+                        imgUrl,
+                        email,
+                        firstName: "",
+                        lastName: "",
+                        id: payload.user.id,
                     });
                 });
         });
