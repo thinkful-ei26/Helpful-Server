@@ -45,14 +45,16 @@ describe("Auth endpoints", function() {
     });
 
     describe("/auth/login", function() {
-        it("Should reject requests with no credentials", function() {
+        it.only("Should reject requests with no credentials", function() {
             return chai
                 .request(app)
                 .post("/auth/login")
                 .then(res => {
+                    console.log("i am res", res);
                     expect.fail(res);
                 })
                 .catch(err => {
+                    console.log("i am err", err);
                     expect(err.message).to.have.status(400);
                 });
         });
@@ -131,7 +133,7 @@ describe("Auth endpoints", function() {
                     expect(err.message).to.have.status(401);
                 });
         });
-        it.only("Should reject requests with an expired token", function() {
+        it("Should reject requests with an expired token", function() {
             const token = jwt.sign(
                 {
                     user: {
@@ -152,7 +154,6 @@ describe("Auth endpoints", function() {
                 .set("authorization", `Bearer ${token}`)
                 .then(res => expect.fail(res))
                 .catch(err => {
-                    console.log(JSON.stringify(err.message, null, 2));
                     expect(err.message).to.have.status(200);
                 });
         });
@@ -161,8 +162,6 @@ describe("Auth endpoints", function() {
                 {
                     user: {
                         username,
-                        firstName,
-                        lastName,
                     },
                 },
                 JWT_SECRET,
@@ -188,8 +187,6 @@ describe("Auth endpoints", function() {
                     });
                     expect(payload.user).to.deep.equal({
                         username,
-                        firstName,
-                        lastName,
                     });
                     expect(payload.exp).to.be.at.least(decoded.exp);
                 });
