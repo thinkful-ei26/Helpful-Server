@@ -45,7 +45,7 @@ describe("Auth endpoints", function() {
     });
 
     describe("/auth/login", function() {
-        it.only("Should reject requests with no credentials", function() {
+        it("Should reject requests with no credentials", function() {
             return chai
                 .request(app)
                 .post("/auth/login")
@@ -55,7 +55,10 @@ describe("Auth endpoints", function() {
                 })
                 .catch(err => {
                     console.log("i am err", err);
-                    expect(err.message).to.have.status(400);
+                    expect(err.message).to.have.status(401);
+                    expect(err.message.body.message).to.equal(
+                        "Incorrect Form Body"
+                    );
                 });
         });
         it("Should reject requests with incorrect usernames or passwords", function() {
