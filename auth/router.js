@@ -27,10 +27,9 @@ router.post('/login', function (req, res, next) {
     }
     if (!user) { console.log(user) }
     console.log('error report line 26', err)
+    const authToken = createAuthToken(user.serialize());
+    res.json({ authToken });
   })(req, res, next);
-}, (req, res) => {
-  const authToken = createAuthToken(req.user.serialize());
-  res.json({ authToken });
 });
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
