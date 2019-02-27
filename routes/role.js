@@ -114,7 +114,6 @@ router.post('/', jwtAuth, (req, res, next) => {
     return next(err);
   }
   if (typeof role !== 'string') {
-    console.log(typeof role);
     const err = new Error('Error \'role\' was not a string');
     err.status = 400;
     return next(err);

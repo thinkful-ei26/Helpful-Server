@@ -33,7 +33,6 @@ router.get('/org/:orgId', jwtAuth, (req, res, next) => {
         return item.rating;
       });
       const avg = result.reduce((a, b) => a + b, 0) / result.length;
-      console.log(avg);
       res.json({ avg, length: result.length });
     })
     .catch(err => {

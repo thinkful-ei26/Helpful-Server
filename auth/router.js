@@ -23,15 +23,13 @@ router.use(bodyParser.json());
 // The user provides a username and password to login
 router.post("/login", function(req, res, next) {
     passport.authenticate("local", function(err, user, info) {
-        console.log("info line 23", info);
         if (err) {
-            console.log(err);
             return res.json(err);
         }
-        if (!user) {
-            console.log("*words*", user);
-        }
-        console.log("error report line 26", err);
+        // if (!user) {
+        //     console.log("*words*", user);
+        // }
+        // console.log("error report line 26", err);
         if (user.username) {
             const authToken = createAuthToken(user.serialize());
             res.json({ authToken });

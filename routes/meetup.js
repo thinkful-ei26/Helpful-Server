@@ -2,13 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
 
-const {getGeoLocation, getDistance} = require("../utils/geo-location");
+const { getGeoLocation, getDistance } = require("../utils/geo-location");
 const Meetup = require("../models/meetup");
 
 const router = express.Router();
 
 /* Jwt Auth */
-const jwtAuth = passport.authenticate('jwt', { session: false });
+const jwtAuth = passport.authenticate("jwt", { session: false });
 
 /* Get All Meetups Endpoint  */
 router.get("/all", jwtAuth, (req, res, next) => {
@@ -26,9 +26,8 @@ router.get("/all", jwtAuth, (req, res, next) => {
 });
 
 /* Get Meetup by user Id */
-router.get('/owner', jwtAuth, (req, res, next) => {
+router.get("/owner", jwtAuth, (req, res, next) => {
     const userId = req.user.id;
-    console.log(userId)
     Meetup.find({ userId })
         .sort({ createdAt: "desc" })
         .then(meetups => {
@@ -37,7 +36,7 @@ router.get('/owner', jwtAuth, (req, res, next) => {
         .catch(err => {
             next(err);
         });
-})
+});
 
 /* Get Single Meetup Endpoint  */
 router.get("/:id", jwtAuth, (req, res, next) => {
@@ -60,9 +59,6 @@ router.get("/:id", jwtAuth, (req, res, next) => {
             next(err);
         });
 });
-
-
-
 
 /* Post New Meetup Endpoint  */
 router.post("/", jwtAuth, (req, res, next) => {
@@ -100,12 +96,20 @@ router.post("/", jwtAuth, (req, res, next) => {
         return next(err);
     }
     if (!imgUrl) {
-        imgUrl = 'https://dummyimage.com/200x200/000/fff'
+        imgUrl = "https://dummyimage.com/200x200/000/fff";
     }
     /*            */
-    getGeoLocation(location)
-    .then(geoLocation => {
-        const newMeetup = { name, description, location, geoLocation, date, contact, imgUrl, userId };
+    getGeoLocation(location).then(geoLocation => {
+        const newMeetup = {
+            name,
+            description,
+            location,
+            geoLocation,
+            date,
+            contact,
+            imgUrl,
+            userId,
+        };
         Meetup.create(newMeetup)
             .then(response => {
                 res.json(response);
@@ -114,8 +118,6 @@ router.post("/", jwtAuth, (req, res, next) => {
                 next(err);
             });
     });
-
-    
 });
 
 /* Put/Edit Meetup Endpoint  ************************** BROKEN */
@@ -174,7 +176,7 @@ router.put("/", jwtAuth, (req, res, next) => {
     //     }
     // }
     if (!imgUrl) {
-        imgUrl = 'https://dummyimage.com/200x200/000/fff'
+        imgUrl = "https://dummyimage.com/200x200/000/fff";
     }
     // if (imgUrl) {
     //     if (typeof imgUrl !== String) {
@@ -186,23 +188,31 @@ router.put("/", jwtAuth, (req, res, next) => {
     //     }
     // }
     /*            */
-    getGeoLocation(location)
-        .then(geoLocation => {
-            const newMeetup = { name, description, location, geoLocation, date, contact, imgUrl, userId };
-            Meetup.findOneAndUpdate({ _id: userId }, { newMeetup })
-                .then(meetup => {
-                    res.json(meetup);
-                })
-                .catch(err => {
-                    next(err);
-                });
-        });
+    getGeoLocation(location).then(geoLocation => {
+        const newMeetup = {
+            name,
+            description,
+            location,
+            geoLocation,
+            date,
+            contact,
+            imgUrl,
+            userId,
+        };
+        Meetup.findOneAndUpdate({ _id: userId }, { newMeetup })
+            .then(meetup => {
+                res.json(meetup);
+            })
+            .catch(err => {
+                next(err);
+            });
+    });
 });
 
 /* Delete Single Meetup Endpoint  */
 
 router.delete("/", jwtAuth, (req, res, next) => {
-    const {id} = req.body;
+    const { id } = req.body;
     /* Validation */
     if (!mongoose.Types.ObjectId.isValid(id)) {
         const err = new Error("The `id` is not valid");
@@ -212,7 +222,7 @@ router.delete("/", jwtAuth, (req, res, next) => {
     /*            */
     Meetup.findOneAndDelete({ _id: id })
         .then(() => {
-            res.json('deleted').status(202);
+            res.json("deleted").status(202);
         })
         .catch(err => {
             next(err);
