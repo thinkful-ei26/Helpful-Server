@@ -28,7 +28,7 @@ const app = express();
 app.use(morgan('common'));
 
 // CORS
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
@@ -76,9 +76,10 @@ function runServer(databaseUrl, port = PORT) {
       if (err) {
         return reject(err);
       }
+
       server = app
         .listen(port, () => {
-          console.log(`Your app is listening on port ${port}`);
+          console.log(`Your app is listening on port ${port} ${databaseUrl} `);
           resolve();
         })
         .on('error', err => {
