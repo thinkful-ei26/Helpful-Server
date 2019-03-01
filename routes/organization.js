@@ -41,7 +41,7 @@ router.get("/location/:range/:lat/:lng", jwtAuth, (req, res, next) => {
                 orgs.map(org => {
                     let destinations = `${org.geoLocation.lat},${
                         org.geoLocation.lng
-                    }`;
+                        }`;
                     return getDistance(origins, destinations).then(distance => {
                         if (distance <= range) {
                             return org;
