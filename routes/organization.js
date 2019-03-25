@@ -2,7 +2,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
-const { getGeoLocation, getDistance } = require("../utils/geo-location");
+const {
+    getGeoLocation,
+    getDistance,
+    validateAddress,
+} = require("../utils/geo-location");
 
 const Organization = require("../models/organization");
 const Role = require("../models/role");
@@ -41,7 +45,7 @@ router.get("/location/:range/:lat/:lng", jwtAuth, (req, res, next) => {
                 orgs.map(org => {
                     let destinations = `${org.geoLocation.lat},${
                         org.geoLocation.lng
-                        }`;
+                    }`;
                     return getDistance(origins, destinations).then(distance => {
                         if (distance <= range) {
                             return org;
@@ -120,18 +124,18 @@ router.post("/", jwtAuth, (req, res, next) => {
         imgUrl = "https://dummyimage.com/200x200/000/fff";
     }
     /*            */
-
-    getGeoLocation(location)
-        .then(geoLocation => {
+    validateAddress("", location).then(result => {
+        if (!result.Latitude || !result.Longitude) {
+            res.json(result);
+        } else {
             const newOrganization = {
                 name,
                 description,
                 location,
-                geoLocation,
+                geoLocation: result,
                 contact,
                 imgUrl,
             };
-
             Organization.create(newOrganization)
                 .then(response => {
                     res.json(response);
@@ -144,16 +148,46 @@ router.post("/", jwtAuth, (req, res, next) => {
                         role: "admin",
                         organizationId: newOrg._id,
                     };
-
                     Role.create(newAdmin);
                 })
                 .catch(err => {
                     next(err);
                 });
-        })
-        .catch(err => {
-            next(err);
-        });
+        }
+    });
+    // getGeoLocation(location)
+    //     .then(geoLocation => {
+    //     const newOrganization = {
+    //         name,
+    //         description,
+    //         location,
+    //         geoLocation,
+    //         contact,
+    //         imgUrl,
+    //     };
+
+    //     Organization.create(newOrganization)
+    //         .then(response => {
+    //             res.json(response);
+    //             return response;
+    //         })
+    //         // create admin role
+    //         .then(newOrg => {
+    //             const newAdmin = {
+    //                 userId: userId,
+    //                 role: "admin",
+    //                 organizationId: newOrg._id,
+    //             };
+
+    //             Role.create(newAdmin);
+    //         })
+    //         .catch(err => {
+    //             next(err);
+    //         });
+    // })
+    // .catch(err => {
+    //     next(err);
+    // });
 });
 
 /* Put/Edit Organization Endpoint  */
