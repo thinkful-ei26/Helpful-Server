@@ -34,7 +34,7 @@ router.post("/login", function(req, res, next) {
             const authToken = createAuthToken(user.serialize());
             res.json({ authToken });
         } else {
-            res.status(401).json({ message: "Incorrect Form Body" });
+            res.status(401).json({ message: "Incorrect Username or Password" });
         }
     })(req, res, next);
 });
