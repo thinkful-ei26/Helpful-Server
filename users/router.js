@@ -109,8 +109,7 @@ router.post("/register", jsonParser, (req, res) => {
         lastName = "",
         imgUrl = "https://dummyimage.com/200x200/000/fff",
     } = req.body;
-    // Username and password come in pre-trimmed, otherwise we throw an error
-    // before this
+    // Username and password come in pre-trimmed, otherwise we throw an error before this
     firstName = firstName.trim();
     lastName = lastName.trim();
     User.findOne({ email }).then(user => {
